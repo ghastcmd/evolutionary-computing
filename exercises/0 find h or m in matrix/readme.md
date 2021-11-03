@@ -1,0 +1,1 @@
+A atividade serve para conseguir detectar, em uma matriz 5x5, o caracter m ou h ou se não é nenhum dos dois.
