@@ -22,7 +22,7 @@ def create_h(height, bar_width, bar_position, x_position, y_position):
     assert x_position >= 0 and x_position <= 5 - height
     assert y_position >= 0 and y_position < 5 - bar_width - 1
 
-    arr = np.zeros((5,5))
+    arr = np.zeros((5,5), dtype=np.int)
     for i in range(height):
         arr[i + y_position, x_position] = 1
         arr[i + y_position, x_position + bar_width + 1] = 1
@@ -46,11 +46,11 @@ for h in range(3, 6):
                         pass
 
 h_list = np.array(h_list)
-print(np.array(h_list))
+print(h_list)
 
 
 m_list = np.array(
-    [
+    [[
         [1, 0, 0, 0, 1],
         [1, 1, 0, 1, 1],
         [1, 0, 1, 0, 1],
@@ -70,5 +70,7 @@ m_list = np.array(
         [1, 1, 0, 1, 1],
         [1, 0, 1, 0, 1],
         [1, 0, 0, 0, 1],
-    ]
+    ]]
 )
+
+print(m_list)
