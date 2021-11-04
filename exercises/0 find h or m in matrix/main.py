@@ -9,19 +9,6 @@ def search_matrix(list, matrix):
             return True
     return False
 
-first = np.random.randint(0, 2, (3,5,5))
-m_example = np.array(
-    [
-        [1, 0, 1, 0, 0],
-        [1, 1, 1, 0, 0],
-        [1, 0, 1, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-    ]
-)
-
-first[1] = m_example
-
 # Draws a h in a 5x5 boolean matrix
 # height goes from 3 to 5
 # bar_width goes from 1 to 3
