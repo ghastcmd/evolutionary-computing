@@ -10,28 +10,26 @@ class DualPerceptronNetwork:
     learning_rate = 1
     
     def train(self, question: np.array, right_answer: np.array):
-        infered_answer = 0
-        error_rate = [0,0]
+        error_rate = np.ones(2)
         
-        while error_rate != 0:
+        while error_rate.any() != 0:
             infered_answer = self.infer(question)
             
             error_rate[0] = right_answer[0] - infered_answer[0]
             error_rate[1] = right_answer[1] - infered_answer[1]
-            
-            for i in range(len(self.weights0)):
-                self.weights0[i] += self.learning_rate * error_rate * question[i]
-    
-            for i in range(len(self.weights1)):
-                self.weights1[i] += self.learning_rate * error_rate * question[i]
+
+            self.weights0 += self.learning_rate * error_rate[0] * question
+            self.weights1 += self.learning_rate * error_rate[1] * question
+        
     
     def infer(self, question: np.array):
-        y = [0,0]
-        infered_answer = [0,0]
+        y = np.array([0,0])
         
         y[0] = np.sum(self.weights0 * question)
         y[1] = np.sum(self.weights1 * question)
         
-        y += self.bias * self.bias_weight
+        y[0] += self.bias * self.bias_weight
+        y[1] += self.bias * self.bias_weight
         
-        return y > 0
+        ret_array = np.array(y >= 0, dtype=int)
+        return ret_array
