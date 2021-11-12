@@ -70,11 +70,29 @@ m_list = np.array(
         [1, 1, 0, 1, 1],
         [1, 0, 1, 0, 1],
         [1, 0, 0, 0, 1],
-    ]]
+    ]] * 9
 )
 
-# print(m_list)
+h_list_answers = [[1,0]] * len(h_list)
+m_list_answers = [[0,1]] * len(m_list) * 9
 
-from DualPerceptronNetworkRun import run
+question_list = np.vstack((h_list, m_list))
+answer_list = np.vstack((h_list_answers, m_list_answers))
 
-run()
+from DualPerceptronNetwork import *
+
+network = DualPerceptronNetwork()
+
+network.train_list(question_list, answer_list, 5)
+
+def test(mat):
+    print(mat)
+    print(network.infer(mat))
+    
+mat = np.random.randint(0, 2, 25)
+
+test(mat)
+
+# from DualPerceptronNetworkRun import run
+
+# run()
