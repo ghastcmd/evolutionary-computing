@@ -46,7 +46,7 @@ for h in range(3, 6):
                         pass
 
 h_list = np.array(h_list)
-print(h_list)
+# print(h_list)
 
 
 m_list = np.array(
@@ -73,4 +73,8 @@ m_list = np.array(
     ]]
 )
 
-print(m_list)
+# print(m_list)
+
+from DualPerceptronNetworkRun import run
+
+run()
