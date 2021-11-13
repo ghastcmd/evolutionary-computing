@@ -1,0 +1,1 @@
+This contains the code for the recognizing shapes using a perceptron of a 20x20 matrix.
