@@ -32,8 +32,8 @@ class PerceptronNetwork:
         
         error_rate = right_answer - infered_answer
 
-        for i, weight in enumerate(self.weights):
-            weight += self.learning_rate * error_rate[i] * question
+        for weight, err_rate in zip(self.weights, error_rate):
+            weight += self.learning_rate * err_rate * question
         
     
     def infer(self, question: np.array):
@@ -42,6 +42,21 @@ class PerceptronNetwork:
         
         for i, weight in enumerate(self.weights):
             y[i] = np.sum(weight * question) + self.bias
-               
+        
         ret_array = np.array(y >= 0, dtype=int)
         return ret_array
+
+    def test(self, test_questions, test_answers):
+        assert type(test_questions) == np.ndarray
+        assert type(test_answers) == np.ndarray
+        
+        correct = 0
+        count = 0
+        for question, answer in zip(test_questions, test_answers):
+            count += 1
+            infered = self.infer(question)
+            
+            if infered.all() == answer.all():
+                correct += 1
+            
+        print('Success rate:', (correct / count) * 100, '%')

@@ -30,4 +30,4 @@ if __name__ == '__main__':
     
     network.train_list(questions, answers, 20)
     
-    print(network.infer(m))
+    network.test(questions, answers)
