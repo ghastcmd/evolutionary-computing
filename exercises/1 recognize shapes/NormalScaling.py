@@ -14,7 +14,10 @@ def scale(matrix: np.ndarray, final_shape: tuple):
             ret_matrix[yy:yy+scale_height,xx:xx+scale_width] = matrix[y, x]
 
     return ret_matrix
-    
+
+def test(num_of_test: 1, mat1: np.ndarray, mat2: np.ndarray):
+    print(f'Test {num_of_test:02}: ', (mat1 == mat2).all())
+
 if __name__ == '__main__':
     mat = np.array([
         [1, 0],
@@ -25,4 +28,5 @@ if __name__ == '__main__':
     
     test_matrix = np.ones((20, 20))
     test_matrix[0:10,10:20] = 0
-    print('Test 01: ', (final_matrix == test_matrix).all())
+    test(1, final_matrix, test_matrix)
+    
