@@ -15,18 +15,29 @@ def scale(matrix: np.ndarray, final_shape: tuple):
 
     return ret_matrix
 
-def test(num_of_test: 1, mat1: np.ndarray, mat2: np.ndarray):
-    print(f'Test {num_of_test:02}: ', (mat1 == mat2).all())
+if __name__ == '__main__':    
+    class Test:
+        def __init__(self):
+            self.num_test = 1
 
-if __name__ == '__main__':
-    mat = np.array([
+        def test_print(self, mat1, mat2):
+            print(f'Test {self.num_test:02}: ', (mat1 == mat2).all())
+            self.num_test += 1
+
+        def test(self, little_matrix, final_matrix):
+            out_matrix = scale(little_matrix, final_matrix.shape)
+        
+            self.test_print(out_matrix, final_matrix)
+
+    tt = Test()
+    
+    little_matrix = np.array([
         [1, 0],
         [1, 1],
     ])
     
-    final_matrix = scale(mat, (20,20))
-    
     test_matrix = np.ones((20, 20))
     test_matrix[0:10,10:20] = 0
-    test(1, final_matrix, test_matrix)
+    
+    tt.test(little_matrix, test_matrix)
     
