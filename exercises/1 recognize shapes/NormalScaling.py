@@ -41,3 +41,21 @@ if __name__ == '__main__':
     
     tt.test(little_matrix, test_matrix)
     
+    little_matrix = np.array([
+        [0, 0],
+        [1, 1]
+    ])
+
+    test_matrix = np.vstack([np.zeros((10, 20)), np.ones((10, 20))])
+    
+    tt.test(little_matrix, test_matrix)
+    
+    little_matrix = np.array([
+        [0, 0],
+        [1, 0]
+    ])
+    
+    test_matrix = np.zeros((20, 20))
+    test_matrix[10:20,0:10] = 1
+    
+    tt.test(little_matrix, test_matrix)
