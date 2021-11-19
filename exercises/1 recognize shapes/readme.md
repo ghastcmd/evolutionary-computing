@@ -13,9 +13,14 @@ The nxn shape of the matrix, the binary matrix, a line break, then the result if
 Example:
 
 4 4
+
 0 0 0 0
+
 1 1 1 1
+
 1 1 1 1
+
 1 1 1 1
+
 1
 
