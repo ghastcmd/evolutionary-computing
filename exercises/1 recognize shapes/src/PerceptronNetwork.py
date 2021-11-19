@@ -60,3 +60,24 @@ class PerceptronNetwork:
                 correct += 1
             
         print('Success rate:', (correct / count) * 100, '%')
+        
+    def save(self, output_path):
+        with open(output_path, 'w') as fp:
+            fp.write(f'{self.num_perceptrons}\n')
+            fp.write(f'{self.learning_rate}\n')
+            for weight in self.weights:
+                out_str = ''
+                for value in weight:
+                    out_str += f'{value} '
+                fp.write(f'{out_str}\n')
+    
+    def load(self, input_path):
+        with open(input_path, 'r') as fp:
+            self.num_perceptrons = int(fp.readline().strip())
+            self.learning_rate = int(fp.readline().strip())
+            self.weights = []
+            for _ in range(self.num_perceptrons):
+                values = fp.readline().strip().split()
+                values = [float(x) for x in values]
+
+                self.weights.append(values)
