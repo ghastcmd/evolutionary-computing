@@ -14,14 +14,43 @@ def scan_window(matrix, neural_network: PerceptronNetwork):
 
     return num_shapes
 
-if __name__ == '__main__':
-    network = PerceptronNetwork(20*20, 1)
+def read_training_file(path):
+    ret_matrix = []
+    ret_answers = []
     
-    if os.path.exists('shapes_network.data'):
-        network.load('shapes_network.data')
-    else:
-        print('You need to train the model first')
-        exit()    
+    with open(path, 'r') as fp:
+        mat_shape = fp.readline().strip().split(' ')
+        mat_shape = tuple([int(x) for x in mat_shape])
+        mat_list = []
+        for _ in range(mat_shape[0]):
+            line_mat = fp.readline().strip().split(' ')
+            line_mat = [int(x) for x in line_mat]
+            mat_list.append(line_mat)
+        
+        mat_list = np.array(mat_list, dtype=int).reshape(mat_shape)
+        mat_list = scale(mat_list, (20,20))
+        
+        ret_matrix.append(mat_list)
+        
+        ret_answers.append(int(fp.readline().strip()))
+        fp.readline()
+    
+    return ret_matrix, ret_answers
+
+if __name__ == '__main__':
+    
+    values, answers = read_training_file('training.dat')
+    
+    print(values, '\n', answers)
+    
+    
+    # network = PerceptronNetwork(20*20, 1)
+    
+    # if os.path.exists('shapes_network.data'):
+    #     network.load('shapes_network.data')
+    # else:
+    #     print('You need to train the model first')
+    #     exit()    
 
 
 exit()
