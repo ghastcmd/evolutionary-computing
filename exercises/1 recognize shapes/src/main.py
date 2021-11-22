@@ -5,7 +5,7 @@ from NormalScaling import scale
 
 def scan_window(matrix, neural_network: PerceptronNetwork):
     num_shapes = 0
-    for window in range(2, 21):
+    for window in range(3, 21):
         for x in range(1, 20 - window):
             for y in range(1, 20 - window):
                 view = matrix[y:y+window,x:x+window]
@@ -25,7 +25,8 @@ def read_training_file(path):
             if start_read == '':
                 break
             elif start_read == '\n':
-                start_read = fp.readline()
+                while start_read == '\n':
+                    start_read = fp.readline()
             
             mat_shape = start_read.strip().split(' ')
             mat_shape = tuple([int(x) for x in mat_shape])
@@ -56,9 +57,43 @@ if __name__ == '__main__':
         else:
             print('Need to have a training file')
             exit()
-        network.train_list(questions, answers, 10)
+        network.train_list(questions, answers, 11)
+        network.save('shapes_network.data')
+        network.test(questions, answers)
+    
     
     input_matrix = np.zeros((20,20))
+    
+    input_matrix = np.array([
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ])
+    
+    # input_matrix = scale(np.array([
+    #     [1, 0, 1],
+    #     [1, 1, 1],
+    #     [1, 1, 1],
+    # ]), (20, 20))
+    
+    print(input_matrix)
     
     num_shapes = scan_window(input_matrix, network)
     print(f'There is {num_shapes} horizontal rectangles in the matrix')

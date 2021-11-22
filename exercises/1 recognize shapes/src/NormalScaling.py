@@ -11,7 +11,7 @@ def scale(matrix: np.ndarray, final_shape: tuple):
         yy = int(y * scale_height)
         for x in range(int(width/scale_width)):
             xx = int(x * scale_width)
-            ret_matrix[yy:yy+int(scale_height),xx:xx+int(scale_width)] = matrix[y, x]
+            ret_matrix[yy:yy+int(scale_height+1),xx:xx+int(scale_width+1)] = matrix[y, x]
 
     return ret_matrix
 

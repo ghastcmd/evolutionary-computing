@@ -3,7 +3,7 @@ import numpy as np
 np.random.seed(1)
 
 class PerceptronNetwork:
-    bias = 0.5
+    bias = -0.5
     
     def __init__(self, input_shape: int, num: int, lr: float = 1):
         self.num_perceptrons = num
