@@ -7,9 +7,9 @@ def scale(matrix: np.ndarray, final_shape: tuple):
     scale_width = width/orig_width
     scale_height = height/orig_height
     
-    for y in range(int(height/scale_height)):
+    for y in range(orig_height):
         yy = int(y * scale_height)
-        for x in range(int(width/scale_width)):
+        for x in range(orig_width):
             xx = int(x * scale_width)
             ret_matrix[yy:yy+int(scale_height+1),xx:xx+int(scale_width+1)] = matrix[y, x]
 
