@@ -1,0 +1,3 @@
+[submodule "exercises/1 recognize shapes/java"]
+	path = exercises/1 recognize shapes/java
+	url = https://github.com/DaniloVFreire/Perceptron-for-binary-matrix-shape-recognition
