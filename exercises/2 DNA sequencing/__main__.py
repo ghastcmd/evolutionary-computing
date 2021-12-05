@@ -6,7 +6,7 @@ from itertools import permutations
 simple_list1 = ['A', 'C', 'G', 'T', 'C', 'A']
 simple_list2 = ['C', 'C', 'T', 'C', 'G']
 
-another = simple_list1, simple_list2
+# another = simple_list1, simple_list2
 
 def mutate(dna_string):
     ret_str = dna_string.copy()
@@ -15,16 +15,16 @@ def mutate(dna_string):
     
     return ret_str
 
-mutate(simple_list1.copy())
+# mutate(simple_list1.copy())
 
 def crossover(father_string, mother_string):
     idx = random.choice(range(min(len(father_string), len(mother_string))))
     return (father_string[:idx] + mother_string[idx:],
             mother_string[:idx] + father_string[idx:])
 
-a, b = crossover(simple_list1, simple_list2)
-print(a)
-print(b)
+# a, b = crossover(simple_list1, simple_list2)
+# print(a)
+# print(b)
 
 def score(first, second):
     score = 0
@@ -37,8 +37,8 @@ def score(first, second):
             score -= 1
     return score
 
-val = score(a, b)
-print(val)
+# val = score(a, b)
+# print(val)
 
 def permutate(values):
     ret_tuples = []
@@ -47,10 +47,10 @@ def permutate(values):
             ret_tuples.append((i,j))
     return ret_tuples
 
-lists = [a, b, simple_list1, simple_list2]
-permutate(lists)
+# lists = [a, b, simple_list1, simple_list2]
+# permutate(lists)
 
-print('this is after the thing')
+# print('this is after the thing')
 
 def all_score(lists):
     perm = permutate(lists)
@@ -61,23 +61,103 @@ def all_score(lists):
     
     return ret_score_val
 
-print('     ')
+def fitness(lists, orig_list):
+    sum_score = all_score(lists)
+    list_max = 0
+    orig_max = 0
+    for list, orig in zip(lists, orig_list):
+        list_max = max(list_max, len(list))
+        orig_max = max(orig_max, len(orig))
+    lenght_penalty = list_max / orig_max
 
-all = all_score([a, b, simple_list1])
-print(a)
-print(b)
-print(simple_list1)
-print(all)
+    return sum_score - lenght_penalty / 2
 
-def detect_monster(dna_string, original_dna_list):
-    string_copy = dna_string.copy()
+# print('     ')
+
+# all = all_score([a, b, simple_list1])
+# print(a)
+# print(b)
+# print(simple_list1)
+# print(all)
+
+def is_monster(dna_string, original_dna_list, pos):
+    index = 0
+    for val in original_dna_list[pos]:
+        while dna_string[index] == 'X':
+            index += 1
+        if val != dna_string[index]:
+            return True
+        index += 1
     
-    for i in reversed(range(len(string_copy))):
-        if string_copy[i] == 'X':
-            del string_copy[i]
-    
-    return not string_copy in original_dna_list
+    return False
 
-res = detect_monster(a, another)
-print(a, another)
-print(res)
+def crossover_not_monster(father, mother, original, pos):
+    a, b = crossover(father, mother)
+    while is_monster(a, original, pos) or is_monster(b, original, pos):
+        a, b = crossover(father, mother)
+    return a, b
+
+def mutate_not_monster(val, orig_list, pos):
+    new_specie = mutate(val)
+    while is_monster(new_specie, orig_list, pos):
+        new_specie = mutate(val)
+    return new_specie
+    
+# res = is_monster(a, another)
+# print(a, another)
+# print(res)
+
+solutions = []
+orig_list = [simple_list1, simple_list2]
+start_list = orig_list.copy()
+solutions = []
+
+for i in range(100):
+    vals = []
+    for i, val in enumerate(orig_list):
+        new_string = mutate_not_monster(val, orig_list, i)
+        vals.append(new_string)
+        
+    solutions.append(vals)
+
+for i in range(100):
+    ranked_solutions = []
+    
+    for s in solutions:
+        ranked_solutions.append((fitness(s, orig_list), s))
+    # print(ranked_solutions)
+    
+    ranked_solutions.sort()
+    ranked_solutions.reverse()
+    
+    print(f'==== Gen {i} best solution ====')
+    print(ranked_solutions[0])
+    
+    best_solutions = ranked_solutions[:10]
+    
+    elements = []
+    for s in best_solutions:
+        values = []
+        children1 = []
+        children2 = []
+        for i, val in enumerate(s[1]):
+            new_specie = mutate_not_monster(val, orig_list, i)
+            values.append(new_specie)
+        
+            a, b = crossover_not_monster(new_specie, val, orig_list, i)
+            children1.append(a)
+            children2.append(b)
+            
+        elements.append(values)
+        elements.append(children1)
+        elements.append(children2)
+    
+    # print(elements)
+    
+    new_gen = []
+    for _ in range(100):
+        
+        
+        new_gen.append(random.choice(elements))
+    
+    solutions = new_gen
