@@ -6,14 +6,16 @@ from itertools import permutations
 simple_list1 = ['A', 'C', 'G', 'T', 'C', 'A']
 simple_list2 = ['C', 'C', 'T', 'C', 'G']
 
-def mutate(dna_string):
-    index = random.choice(range(len(dna_string)))
-    dna_string.insert(index, 'X')
-    
-    print(index)
+another = simple_list1, simple_list2
 
-mutate(simple_list1)
-print(simple_list1)
+def mutate(dna_string):
+    ret_str = dna_string.copy()
+    index = random.choice(range(len(ret_str)))
+    ret_str.insert(index, 'X')
+    
+    return ret_str
+
+mutate(simple_list1.copy())
 
 def crossover(father_string, mother_string):
     idx = random.choice(range(min(len(father_string), len(mother_string))))
@@ -66,3 +68,16 @@ print(a)
 print(b)
 print(simple_list1)
 print(all)
+
+def detect_monster(dna_string, original_dna_list):
+    string_copy = dna_string.copy()
+    
+    for i in reversed(range(len(string_copy))):
+        if string_copy[i] == 'X':
+            del string_copy[i]
+    
+    return not string_copy in original_dna_list
+
+res = detect_monster(a, another)
+print(a, another)
+print(res)
