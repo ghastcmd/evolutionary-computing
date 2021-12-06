@@ -78,7 +78,7 @@ def fitness(lists, orig_list):
     # the middle of the sequence
     spacing_penalty = 0
     for val in list:
-        middle = len(val)
+        middle = len(val) / 2
         for i, vv in enumerate(val):
             spacing_penalty += abs(middle - i) / middle
 
