@@ -1,12 +1,8 @@
-# First we have to define the dna
-
 import random
 from itertools import permutations
 
 simple_list1 = ['A', 'C', 'G', 'T', 'C', 'A']
 simple_list2 = ['C', 'C', 'T', 'C']
-
-# another = simple_list1, simple_list2
 
 DEBUG = False
 
@@ -24,16 +20,10 @@ def mutate(dna_string, prob=0.5):
     
     return ret_str
 
-# mutate(simple_list1.copy())
-
 def crossover(father_string, mother_string):
     idx = random.choice(range(min(len(father_string), len(mother_string))))
     return (father_string[:idx] + mother_string[idx:],
             mother_string[:idx] + father_string[idx:])
-
-# a, b = crossover(simple_list1, simple_list2)
-# print(a)
-# print(b)
 
 def equalize_strips(a, b):
     if len(a) > len(b):
@@ -72,20 +62,12 @@ def score(string_a, string_b):
     deb('')
     return score
 
-# val = score(a, b)
-# print(val)
-
 def permutate(values):
     ret_tuples = []
     for i in range(len(values)):
         for j in range(i+1, len(values)):
             ret_tuples.append((i,j))
     return ret_tuples
-
-# lists = [a, b, simple_list1, simple_list2]
-# permutate(lists)
-
-# print('this is after the thing')
 
 def all_score(lists):
     perm = permutate(lists)
@@ -119,14 +101,6 @@ def fitness(lists, orig_list):
 
     return sum_score - lenght_penalty / 8 - spacing_penalty / 2
 
-# print('     ')
-
-# all = all_score([a, b, simple_list1])
-# print(a)
-# print(b)
-# print(simple_list1)
-# print(all)
-
 def is_monster(dna_string, original_dna_list, pos):
     index = 0
     for val in original_dna_list[pos]:
@@ -143,10 +117,6 @@ def crossover_not_monster(father, mother, original, pos):
     while is_monster(a, original, pos) or is_monster(b, original, pos):
         a, b = crossover(father, mother)
     return a, b
-
-# res = is_monster(a, another)
-# print(a, another)
-# print(res)
 
 solutions = []
 orig_list = [simple_list1, simple_list2]
