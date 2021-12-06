@@ -1,11 +1,8 @@
 import random
 from itertools import permutations
 
-simple_list1 = ['A', 'C', 'G', 'T', 'C', 'A']
-simple_list2 = ['C', 'C', 'T', 'C']
-
+# Debug printing
 DEBUG = False
-
 def deb(*string, end='\n'):
     if DEBUG:
         print(*string, end=end)
@@ -119,23 +116,26 @@ def crossover_not_monster(father, mother, original, pos):
         a, b = crossover(father, mother)
     return a, b
 
-solutions = []
-orig_list = [simple_list1, simple_list2]
-start_list = orig_list.copy()
-solutions = []
+
+SIMPLE_LIST1 = ['A', 'C', 'G', 'T', 'C', 'A']
+SIMPLE_LIST2 = ['C', 'C', 'T', 'C']
+
+ORIG_LIST = [SIMPLE_LIST1, SIMPLE_LIST2]
+START_LIST = ORIG_LIST.copy()
+SOLUTIONS = []
 
 for i in range(100):
     vals = []
-    for i, val in enumerate(orig_list):
+    for i, val in enumerate(ORIG_LIST):
         new_string = mutate(val)
         vals.append(new_string)
         
-    solutions.append(vals)
+    SOLUTIONS.append(vals)
 
 for i in range(100):
     ranked_solutions = []
     
-    for s in solutions:
+    for s in SOLUTIONS:
         ranked_solutions.append((fitness(s), s))
     # print(ranked_solutions)
     
@@ -151,7 +151,7 @@ for i in range(100):
     best_solutions = ranked_solutions[:10]
     
     elements = []
-    for _ in range(len(orig_list)):
+    for _ in range(len(ORIG_LIST)):
         elements.append([])
     
     for _ in range(100):
@@ -160,16 +160,16 @@ for i in range(100):
         
         for i, xy in enumerate(zip(first[1], second[1])):
             x, y = xy
-            a, b = crossover_not_monster(x, y, orig_list, i)
+            a, b = crossover_not_monster(x, y, ORIG_LIST, i)
             elements[i].append(mutate(a))
             elements[i].append(mutate(b))
     
     new_gen = []
     for _ in range(100):
         values = []
-        for i in range(len(orig_list)):
+        for i in range(len(ORIG_LIST)):
             values.append(random.choice(elements[i]))
         
         new_gen.append(values)
     
-    solutions = new_gen
+    SOLUTIONS = new_gen
