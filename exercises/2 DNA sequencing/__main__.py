@@ -180,29 +180,25 @@ for i in range(100):
     best_solutions = ranked_solutions[:10]
     
     elements = []
-    for s in best_solutions:
-        values = []
-        children1 = []
-        children2 = []
-        for i, val in enumerate(s[1]):
-            new_specie = mutate(val)
-            values.append(new_specie)
-        
-            a, b = crossover_not_monster(new_specie, val, orig_list, i)
-            # mutate(a)
-            children1.append(a)
-            children2.append(b)
-            
-        elements.append(values)
-        elements.append(children1)
-        elements.append(children2)
+    for _ in range(len(orig_list)):
+        elements.append([])
     
-    # print(elements)
+    for _ in range(100):
+        first = random.choice(best_solutions)
+        second = random.choice(best_solutions)
+        
+        for i, xy in enumerate(zip(first[1], second[1])):
+            x, y = xy
+            a, b = crossover_not_monster(x, y, orig_list, i)
+            elements[i].append(mutate(a))
+            elements[i].append(mutate(b))
     
     new_gen = []
     for _ in range(100):
+        values = []
+        for i in range(len(orig_list)):
+            values.append(random.choice(elements[i]))
         
-        
-        new_gen.append(random.choice(elements))
+        new_gen.append(values)
     
     solutions = new_gen
