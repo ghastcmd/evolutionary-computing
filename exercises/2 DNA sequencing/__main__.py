@@ -1,7 +1,12 @@
 # First we have to define the dna
 
 import random
-from itertools import permutations
+
+orig_list=[]
+
+for i in range(5):
+    print("digite a primeira sequencia")
+    orig_list.append(list(map(str, input().split())))
 
 simple_list1 = ['A', 'C', 'G', 'T', 'C', 'A']
 simple_list2 = ['C', 'C', 'T', 'C', 'G']
