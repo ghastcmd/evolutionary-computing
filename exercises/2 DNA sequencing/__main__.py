@@ -80,26 +80,27 @@ def all_score(lists):
 
 def fitness(lists, orig_list):
     sum_score = all_score(lists)
-    list_max = 0
-    orig_max = 0
-    for list, orig in zip(lists, orig_list):
-        list_max = max(list_max, len(list))
-        orig_max = max(orig_max, len(orig))
-    lenght_penalty = list_max / orig_max
+    # Benefit the results that are smaller
+    # list_max = 0
+    # orig_max = 0
+    # for list, orig in zip(lists, orig_list):
+    #     list_max = max(list_max, len(list))
+    #     orig_max = max(orig_max, len(orig))
+    # lenght_penalty = list_max / orig_max
 
     # The weights must preferentially occur at
     # the middle of the sequence
     spacing_penalty = 0
-    for val in list:
+    for val in lists:
         middle = len(val) / 2
         for i, vv in enumerate(val):
             if vv == 'X':
                 spacing_penalty += abs(middle - i) / middle
 
     deb('==== weights ====')
-    deb(sum_score, lenght_penalty / 8, spacing_penalty / 2)
+    deb(sum_score, spacing_penalty / 2)
 
-    return sum_score - lenght_penalty / 8 - spacing_penalty / 2
+    return sum_score - spacing_penalty / 2
 
 def is_monster(dna_string, original_dna_list, pos):
     index = 0
