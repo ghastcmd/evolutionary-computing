@@ -26,15 +26,19 @@ def crossover(father_string, mother_string):
 # print(a)
 # print(b)
 
+# Weights are a = +1, b = 0, o = -1 \\
+# 'a' are alignment with the same nitrogenated basis \\
+# 'b' are alignment with different nitrogenated basis \\
+# 'o' are alignment with gaps and nitrogenated basis \\
 def score(first, second):
     score = 0
     for a, b in zip(first, second):
         if a == 'X' or b == 'X':
-            score += 0
+            score += -1
         elif a == b:
-            score += 1
+            score += +1
         elif a != b:
-            score -= 1
+            score +=  0
     return score
 
 # val = score(a, b)
@@ -70,7 +74,15 @@ def fitness(lists, orig_list):
         orig_max = max(orig_max, len(orig))
     lenght_penalty = list_max / orig_max
 
-    return sum_score - lenght_penalty / 2
+    # The weights must preferentially occur at
+    # the middle of the sequence
+    spacing_penalty = 0
+    for val in list:
+        middle = len(val)
+        for i, vv in enumerate(val):
+            spacing_penalty += abs(middle - i) / middle
+
+    return sum_score - lenght_penalty / 8 - spacing_penalty / 8
 
 # print('     ')
 
