@@ -121,7 +121,6 @@ SIMPLE_LIST1 = ['A', 'C', 'G', 'T', 'C', 'A']
 SIMPLE_LIST2 = ['C', 'C', 'T', 'C']
 
 ORIG_LIST = [SIMPLE_LIST1, SIMPLE_LIST2]
-START_LIST = ORIG_LIST.copy()
 SOLUTIONS = []
 
 for i in range(100):
