@@ -14,10 +14,13 @@ def deb(*string, end='\n'):
     if DEBUG:
         print(*string, end=end)
         
-def mutate(dna_string):
+def mutate(dna_string, prob=0.5):
     ret_str = dna_string.copy()
-    index = random.choice(range(len(ret_str)))
-    ret_str.insert(index, 'X')
+    
+    prob_value = random.uniform(0,1)
+    if prob_value < prob:
+        index = random.choice(range(len(ret_str)))
+        ret_str.insert(index, 'X')
     
     return ret_str
 
@@ -141,12 +144,6 @@ def crossover_not_monster(father, mother, original, pos):
         a, b = crossover(father, mother)
     return a, b
 
-def mutate_not_monster(val, orig_list, pos):
-    new_specie = mutate(val)
-    while is_monster(new_specie, orig_list, pos):
-        new_specie = mutate(val)
-    return new_specie
-    
 # res = is_monster(a, another)
 # print(a, another)
 # print(res)
@@ -159,7 +156,7 @@ solutions = []
 for i in range(100):
     vals = []
     for i, val in enumerate(orig_list):
-        new_string = mutate_not_monster(val, orig_list, i)
+        new_string = mutate(val)
         vals.append(new_string)
         
     solutions.append(vals)
@@ -188,10 +185,11 @@ for i in range(100):
         children1 = []
         children2 = []
         for i, val in enumerate(s[1]):
-            new_specie = mutate_not_monster(val, orig_list, i)
+            new_specie = mutate(val)
             values.append(new_specie)
         
             a, b = crossover_not_monster(new_specie, val, orig_list, i)
+            # mutate(a)
             children1.append(a)
             children2.append(b)
             
