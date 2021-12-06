@@ -4,10 +4,16 @@ import random
 from itertools import permutations
 
 simple_list1 = ['A', 'C', 'G', 'T', 'C', 'A']
-simple_list2 = ['C', 'C', 'T', 'C', 'G']
+simple_list2 = ['C', 'C', 'T', 'C']
 
 # another = simple_list1, simple_list2
 
+DEBUG = False
+
+def deb(*string, end='\n'):
+    if DEBUG:
+        print(*string, end=end)
+        
 def mutate(dna_string):
     ret_str = dna_string.copy()
     index = random.choice(range(len(ret_str)))
@@ -26,19 +32,41 @@ def crossover(father_string, mother_string):
 # print(a)
 # print(b)
 
+def equalize_strips(a, b):
+    if len(a) > len(b):
+        diff = len(a) - len(b)
+        for _ in range(diff):
+            b.insert(len(b), 'X')
+    else:
+        diff = len(b) - len(a)
+        for _ in range(diff):
+            a.insert(len(a), 'X')
+
 # Weights are a = +1, b = 0, o = -1 \\
 # 'a' are alignment with the same nitrogenated basis \\
 # 'b' are alignment with different nitrogenated basis \\
 # 'o' are alignment with gaps and nitrogenated basis \\
-def score(first, second):
+def score(string_a, string_b):
     score = 0
+    
+    first = string_a.copy()
+    second = string_b.copy()
+    
+    equalize_strips(first, second)
+    deb(first)
+    deb(second)
+    
     for a, b in zip(first, second):
         if a == 'X' or b == 'X':
             score += -1
+            deb(' -1  ', end='')
         elif a == b:
             score += +1
+            deb(' +1  ', end='')
         elif a != b:
             score +=  0
+            deb(' +0  ', end='')
+    deb('')
     return score
 
 # val = score(a, b)
@@ -80,9 +108,13 @@ def fitness(lists, orig_list):
     for val in list:
         middle = len(val) / 2
         for i, vv in enumerate(val):
-            spacing_penalty += abs(middle - i) / middle
+            if vv == 'X':
+                spacing_penalty += abs(middle - i) / middle
 
-    return sum_score - lenght_penalty / 8 - spacing_penalty / 8
+    deb('==== weights ====')
+    deb(sum_score, lenght_penalty / 8, spacing_penalty / 2)
+
+    return sum_score - lenght_penalty / 8 - spacing_penalty / 2
 
 # print('     ')
 
@@ -144,6 +176,9 @@ for i in range(100):
     
     print(f'==== Gen {i} best solution ====')
     print(ranked_solutions[0])
+    
+    deb('===== the fitness =====')
+    deb(fitness(ranked_solutions[0][1], orig_list))
     
     best_solutions = ranked_solutions[:10]
     
