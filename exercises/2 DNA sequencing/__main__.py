@@ -78,7 +78,7 @@ def all_score(lists):
     
     return ret_score_val
 
-def fitness(lists, orig_list):
+def fitness(lists):
     sum_score = all_score(lists)
     # Benefit the results that are smaller
     # list_max = 0
@@ -136,7 +136,7 @@ for i in range(100):
     ranked_solutions = []
     
     for s in solutions:
-        ranked_solutions.append((fitness(s, orig_list), s))
+        ranked_solutions.append((fitness(s), s))
     # print(ranked_solutions)
     
     ranked_solutions.sort()
@@ -146,7 +146,7 @@ for i in range(100):
     print(ranked_solutions[0])
     
     deb('===== the fitness =====')
-    deb(fitness(ranked_solutions[0][1], orig_list))
+    deb(fitness(ranked_solutions[0][1]))
     
     best_solutions = ranked_solutions[:10]
     
