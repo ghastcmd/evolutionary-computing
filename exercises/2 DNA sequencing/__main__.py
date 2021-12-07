@@ -142,24 +142,24 @@ ORIG_LIST = []
 SOLUTIONS = []
 NUM_GENERATIONS = 100
 
-# def main():
-#     seq = ['primeira', 'segunda', 'terceira', 'quarta', 'quinta']
-#     for order in seq:
-#         print(f"digite a {order} sequencia")
-#         ORIG_LIST.append(list(map(str, input().split())))
-
 def main():
-    another = [
-        'A C T C G T C',
-        'A C T',
-        'C G T C',
-        'C G T',
-        'T C G T A C'
-    ]
-    for value in another:
-        ref_value = value.split(' ')
+    seq = ['primeira', 'segunda', 'terceira', 'quarta', 'quinta']
+    for order in seq:
+        print(f"digite a {order} sequencia")
+        ORIG_LIST.append(list(map(str, input().split())))
+
+# def main():
+#     another = [
+#         'A C T C G T C',
+#         'A C T',
+#         'C G T C',
+#         'C G T',
+#         'T C G T A C'
+#     ]
+#     for value in another:
+#         ref_value = value.split(' ')
         
-        ORIG_LIST.append(ref_value)
+#         ORIG_LIST.append(ref_value)
 
 main()
 
@@ -170,6 +170,8 @@ for i in range(100):
         vals.append(new_string)
         
     SOLUTIONS.append(vals)
+
+# Running all the generations
 
 for i in range(NUM_GENERATIONS):
     ranked_solutions = []
