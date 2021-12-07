@@ -1,10 +1,6 @@
 import random
 
-orig_list=[]
-
-for i in range(5):
-    print("digite a primeira sequencia")
-    orig_list.append(list(map(str, input().split())))
+random.seed(1)
 
 # Debug printing
 DEBUG = False
@@ -22,32 +18,45 @@ def mutate(dna_string, prob=0.5):
     
     return ret_str
 
+def more_mutate(dna, prob=0.5):
+    ret_str = dna.copy()
+    for i in range(len(ret_str)):
+        prob_value = random.uniform(0,1)
+        if prob_value < prob:
+            dna.insert(i, 'X')
+    
+    return ret_str
+
 def crossover(father_string, mother_string):
     idx = random.choice(range(min(len(father_string), len(mother_string))))
     return (father_string[:idx] + mother_string[idx:],
             mother_string[:idx] + father_string[idx:])
 
-def equalize_strips(a, b):
-    if len(a) > len(b):
-        diff = len(a) - len(b)
+def equalize_strips(a, b, size):
+    size_a = len(a)
+    if size_a < size:
+        diff = size - size_a
         for _ in range(diff):
-            b.insert(len(b), 'X')
-    else:
-        diff = len(b) - len(a)
+            a.insert(size_a, 'X')
+    
+    size_b = len(b)
+    if size_b < size:
+        diff = size - size_b
         for _ in range(diff):
-            a.insert(len(a), 'X')
+            b.insert(size_b, 'X')
+    
 
 # Weights are a = +1, b = 0, o = -1 \\
 # 'a' are alignment with the same nitrogenated basis \\
 # 'b' are alignment with different nitrogenated basis \\
 # 'o' are alignment with gaps and nitrogenated basis \\
-def score(string_a, string_b):
+def score(string_a, string_b, max_size):
     score = 0
     
     first = string_a.copy()
     second = string_b.copy()
     
-    equalize_strips(first, second)
+    equalize_strips(first, second, max_size)
     deb(first)
     deb(second)
     
@@ -74,13 +83,17 @@ def permutate(values):
 def all_score(lists):
     perm = permutate(lists)
     
+    max_size = 0
+    for vv in lists:
+        max_size = max(max_size, len(vv))
+    
     ret_score_val = 0
     for val in perm:
-        ret_score_val += score(lists[val[0]], lists[val[1]])
+        ret_score_val += score(lists[val[0]], lists[val[1]], max_size)
     
     return ret_score_val
 
-def fitness(lists):
+def fitness(lists, orig_list):
     sum_score = all_score(lists)
     # Benefit the results that are smaller
     # list_max = 0
@@ -100,9 +113,9 @@ def fitness(lists):
                 spacing_penalty += abs(middle - i) / middle
 
     deb('==== weights ====')
-    deb(sum_score, spacing_penalty / 2)
+    deb(sum_score, -spacing_penalty)
 
-    return sum_score - spacing_penalty / 2
+    return sum_score - spacing_penalty
 
 def is_monster(dna_string, original_dna_list, pos):
     index = 0
@@ -125,8 +138,30 @@ def crossover_not_monster(father, mother, original, pos):
 SIMPLE_LIST1 = ['A', 'C', 'G', 'T', 'C', 'A']
 SIMPLE_LIST2 = ['C', 'C', 'T', 'C']
 
-ORIG_LIST = [SIMPLE_LIST1, SIMPLE_LIST2]
+ORIG_LIST = []
 SOLUTIONS = []
+NUM_GENERATIONS = 100
+
+# def main():
+#     seq = ['primeira', 'segunda', 'terceira', 'quarta', 'quinta']
+#     for order in seq:
+#         print(f"digite a {order} sequencia")
+#         ORIG_LIST.append(list(map(str, input().split())))
+
+def main():
+    another = [
+        'A C T C G T C',
+        'A C T',
+        'C G T C',
+        'C G T',
+        'T C G T A C'
+    ]
+    for value in another:
+        ref_value = value.split(' ')
+        
+        ORIG_LIST.append(ref_value)
+
+main()
 
 for i in range(100):
     vals = []
@@ -136,11 +171,11 @@ for i in range(100):
         
     SOLUTIONS.append(vals)
 
-for i in range(100):
+for i in range(NUM_GENERATIONS):
     ranked_solutions = []
     
     for s in SOLUTIONS:
-        ranked_solutions.append((fitness(s), s))
+        ranked_solutions.append((fitness(s, ORIG_LIST), s))
     # print(ranked_solutions)
     
     ranked_solutions.sort()
@@ -150,30 +185,47 @@ for i in range(100):
     print(ranked_solutions[0])
     
     deb('===== the fitness =====')
-    deb(fitness(ranked_solutions[0][1]))
+    deb(fitness(ranked_solutions[0][1], ORIG_LIST))
     
     best_solutions = ranked_solutions[:10]
     
     elements = []
-    for _ in range(len(ORIG_LIST)):
-        elements.append([])
-    
     for _ in range(100):
         first = random.choice(best_solutions)
         second = random.choice(best_solutions)
         
+        children1 = []
+        children2 = []
+        
         for i, xy in enumerate(zip(first[1], second[1])):
             x, y = xy
             a, b = crossover_not_monster(x, y, ORIG_LIST, i)
-            elements[i].append(mutate(a))
-            elements[i].append(mutate(b))
+            children1.append(mutate(a))
+            children2.append(mutate(b))
+        
+        elements.append(children1)
+        elements.append(children2)
     
     new_gen = []
-    for _ in range(100):
+    
+    for val in best_solutions:
+        new_gen.append(val[1])
+    
+    for _ in range(90):
+        random_string = random.choice(elements)
+        
+        new_gen.append(random_string)
+    
+    for _ in range(10):
+        random_string = random.choice(elements)
+        
         values = []
-        for i in range(len(ORIG_LIST)):
-            values.append(random.choice(elements[i]))
+        for val in random_string:
+            values.append(more_mutate(val, 0.3))
         
         new_gen.append(values)
     
     SOLUTIONS = new_gen
+
+# DEBUG = True
+# fitness(SOLUTIONS[0], ORIG_LIST)
