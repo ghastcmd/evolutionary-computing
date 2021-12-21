@@ -53,8 +53,38 @@ class Maze:
         
         return graph
 
-if __name__ == '__main__':
+    # Standard DFS with depth caching
+    def dfs(self, graph, vert, pre, depth, depths):
+        pre[vert] = 0
+        
+        for child in graph[vert]:
+            pos_y, pos_x = (child//self.width, child%self.width)
+            if self.maze[pos_y][pos_x] == -1:
+                depths.append(depth)
+                return
+            
+            if pre[child] == -1:
+                self.dfs(graph, child, pre, depth+1, depths)
 
+    # It returns 0 if the maze is invalid
+    def is_valid(self):
+        graph = self.generate_graph()
+        
+        depths = []
+        start_vert = self.start_pos[0] * self.width + self.start_pos[1]
+        pre = [-1] * self.width * self.height
+        
+        self.dfs(graph, start_vert, pre, -1, depths)
+        
+        if depths == []:
+            ret_value = 0
+        else:
+            ret_value = min(depths)
+                    
+        return ret_value
+        
+
+if __name__ == '__main__':
     test_maze = Maze([
         [0, 0, 0],
         [0, 0, 0],
@@ -69,4 +99,10 @@ if __name__ == '__main__':
 
     graph = test_maze.generate_graph()
 
+    # for line in [[0, 1, 2],[3, 4, 5], [6, 7, 8]]:
+    #     print(line)
     assert graph == [[3, 1], [0, 4, 2], [1, 5], [0, 6, 4], [1, 3, 7, 5], [2, 4, 8], [3, 7], [4, 6, 8], [5, 7]]
+    
+    assert test_maze.is_valid() == 3
+    
+    assert Maze([[0,0,0],[0,0,0],[0,0,0]]).is_valid() == 0
