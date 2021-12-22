@@ -77,7 +77,7 @@ class Maze:
             
             if pre[child] == -1:
                 self.dfs(graph, child, pre, depth, depths)
-                pre[vert] = -1
+                pre[child] = -1
 
 
     # It returns 0 if the maze is invalid
