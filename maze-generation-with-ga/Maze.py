@@ -69,7 +69,7 @@ class Maze:
         ret_str = ''
         for line in self.maze:
             ret_str += str(line) + '\n'
-        return ret_str
+        return ret_str[:-1]
 
     # Standard DFS with depth caching
     def dfs(self, graph, vert, pre, depth, depths):
