@@ -1,12 +1,12 @@
 from Maze import Maze
 import random
 
-def fitness(maze: Maze):
+def fitness(maze: Maze) -> int:
     fit_value = 0
     max_path = maze.is_valid()
     
     if max_path == 0:
-        fit_value -= 100
+        fit_value -= maze.width * maze.height
         
     fit_value += max_path * 2
     
@@ -17,7 +17,7 @@ def fitness(maze: Maze):
     
     return fit_value
 
-def crossover(maze1: Maze, maze2: Maze):
+def crossover(maze1: Maze, maze2: Maze) -> tuple[Maze, Maze]:
     assert maze1.height == maze2.height
     assert maze1.width == maze2.width
     
@@ -39,9 +39,39 @@ def mutate(maze: Maze, prob=0.3):
                 val = maze.maze[y][y]
                 if val == 0 or val == 1:
                     maze.maze[y][x] = int(not bool(val))
-            
+
+def gen_matrix(height: int, width: int) -> list[list[int]]:
+    result_matrix = []
+    row_list = [0] * width
+    
+    for _ in range(height):
+        result_matrix.append(row_list.copy())    
+    
+    return result_matrix
+
+def gen_init_pop(start_maze: Maze, num_pop: int, mutate_rate: float = 0.3):
+    start_population = []
+    
+    for _ in range(num_pop):
+        new_maze = start_maze.copy()
+        mutate(new_maze, mutate_rate)
+        start_population.append(new_maze)
+    
+    for maze in start_population:
+        maze.color_points()
+    
+    return start_population
+
+def run(num_population: int, num_elite: int):
+    start_maze = Maze(gen_matrix(4, 4))
+    initial_pop = gen_init_pop(start_maze, num_population)
+    
+    for maze in initial_pop:
+        print(maze, '\n')
 
 if __name__ == '__main__':
+    run(100, 10)
+    
     maze1 = Maze([[1,1], [1,1]])
     maze2 = Maze([[0,0], [0,0]])
     maze1.color_points()

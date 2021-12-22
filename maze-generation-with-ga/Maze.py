@@ -71,6 +71,12 @@ class Maze:
             ret_str += str(line) + '\n'
         return ret_str[:-1]
 
+    def copy(self):
+        ret_matrix = []
+        for line in self.maze:
+            ret_matrix.append(line[:])
+        return Maze(ret_matrix)
+
     # Standard DFS with depth caching
     def dfs(self, graph, vert, pre, depth, depths):
         pre[vert] = 0
