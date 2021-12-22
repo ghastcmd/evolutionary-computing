@@ -25,28 +25,40 @@ class Maze:
         for line in self.maze:
             print(line)
     
+    def get_pos(self, graph_value):
+        x = graph_value % self.width
+        y = graph_value // self.width
+
+        return self.maze[y][x]
+    
     def generate_graph(self):
         graph = []
         
-        for y, line in enumerate(self.maze):
-            for x in range(len(line)):
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.maze[y][x] == 1:
+                    graph.append([])
+                    continue
+                
+                current_pos = y * self.width + x
+                
                 up = (y - 1) * self.width + x
                 right = y * self.width + x + 1
                 left = y * self.width + x - 1
                 down = (y + 1) * self.width + x
                 
                 append_value = []
-                              
-                if y != 0:
+                
+                if y != 0 and self.get_pos(up) != 1:
                     append_value.append(up)
                 
-                if x != 0:
+                if x != 0 and self.get_pos(left) != 1:
                     append_value.append(left)
                 
-                if y != self.height-1:
+                if y != self.height-1 and self.get_pos(down) != 1:
                     append_value.append(down)
                     
-                if x != self.width-1:
+                if x != self.width-1 and self.get_pos(right) != 1:
                     append_value.append(right)
                 
                 graph.append(append_value)
@@ -56,15 +68,17 @@ class Maze:
     # Standard DFS with depth caching
     def dfs(self, graph, vert, pre, depth, depths):
         pre[vert] = 0
+        depth += 1
         
         for child in graph[vert]:
-            pos_y, pos_x = (child//self.width, child%self.width)
-            if self.maze[pos_y][pos_x] == -1:
+            if self.get_pos(child) == -1:
                 depths.append(depth)
                 return
             
             if pre[child] == -1:
-                self.dfs(graph, child, pre, depth+1, depths)
+                self.dfs(graph, child, pre, depth, depths)
+                pre[vert] = -1
+
 
     # It returns 0 if the maze is invalid
     def is_valid(self):
@@ -74,7 +88,7 @@ class Maze:
         start_vert = self.start_pos[0] * self.width + self.start_pos[1]
         pre = [-1] * self.width * self.height
         
-        self.dfs(graph, start_vert, pre, -1, depths)
+        self.dfs(graph, start_vert, pre, 0, depths)
         
         if depths == []:
             ret_value = 0
@@ -106,3 +120,9 @@ if __name__ == '__main__':
     assert test_maze.is_valid() == 3
     
     assert Maze([[0,0,0],[0,0,0],[0,0,0]]).is_valid() == 0
+    
+    test_maze.maze[1][1] = 1
+    assert test_maze.is_valid() == 3
+    
+    test_maze.maze[0][1] = 1
+    assert test_maze.is_valid() == 5
