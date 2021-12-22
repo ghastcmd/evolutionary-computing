@@ -32,11 +32,29 @@ def crossover(maze1: Maze, maze2: Maze):
     
     return (ret_maze1, ret_maze2)
 
+def mutate(maze: Maze, prob=0.3):
+    for y in range(maze.height):
+        for x in range(maze.width):
+            if random.uniform(0, 1) <= prob:
+                val = maze.maze[y][y]
+                if val == 0 or val == 1:
+                    maze.maze[y][x] = int(not bool(val))
+            
 
 if __name__ == '__main__':
     maze1 = Maze([[1,1], [1,1]])
-    maze2 = Maze([[2,2], [2,2]])
+    maze2 = Maze([[0,0], [0,0]])
+    maze1.color_points()
+    maze2.color_points()
     
     aaa1, aaa2 = crossover(maze1, maze2)
     print(aaa1)
     print(aaa2)
+    
+    mutate(maze1)
+    print(maze1)
+    
+    print(fitness(maze1))
+    print(fitness(maze2))
+    print(fitness(aaa1))
+    print(fitness(aaa2))
