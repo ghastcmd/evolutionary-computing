@@ -65,6 +65,12 @@ class Maze:
         
         return graph
 
+    def __str__(self):
+        ret_str = ''
+        for line in self.maze:
+            ret_str += str(line) + '\n'
+        return ret_str
+
     # Standard DFS with depth caching
     def dfs(self, graph, vert, pre, depth, depths):
         pre[vert] = 0
