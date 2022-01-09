@@ -67,7 +67,7 @@ def run(
     shape: tuple[int, int] = (4,4)
 ):
     start_maze = Maze(gen_matrix(*shape))
-    initial_pop = gen_init_pop(start_maze, num_population, 0.5)
+    initial_pop = gen_init_pop(start_maze, num_population, 0.1)
     
     best_ret_mazes = []
     

@@ -78,29 +78,36 @@ class Maze:
         return Maze(ret_matrix)
 
     # Standard DFS with depth caching
-    def dfs(self, graph, vert, pre, depth, depths):
-        pre[vert] = 0
-        depth += 1
+    def dfs(self, graph, vert, depths):
+        visited = [False] * self.width * self.height
         
-        for child in graph[vert]:
-            if self.get_pos(child) == -1:
-                depths.append(depth)
-                return
+        stack = []
+        stack.append((vert, 1))
+        
+        while (len(stack)):
+            s = stack.pop()
+            depth = s[1]
+            s = s[0]
             
-            if pre[child] == -1:
-                self.dfs(graph, child, pre, depth, depths)
-                pre[child] = -1
-
-
+            if not visited[s]:
+                visited[s] = True
+            
+            for child in graph[s]:
+                if self.get_pos(child) == -1:
+                    depths.append(depth)
+                    break
+                
+                if not visited[child]:
+                    stack.append((child, depth+1))
+    
     # It returns 0 if the maze is invalid
     def is_valid(self):
         graph = self.generate_graph()
         
         depths = []
         start_vert = self.start_pos[0] * self.width + self.start_pos[1]
-        pre = [-1] * self.width * self.height
         
-        self.dfs(graph, start_vert, pre, 0, depths)
+        self.dfs(graph, start_vert, depths)
         
         if depths == []:
             ret_value = 0
