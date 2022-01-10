@@ -64,10 +64,10 @@ def gen_init_pop(start_maze: Maze, num_pop: int, mutate_rate: float = 0.3):
 
 def run(
     num_population: int, num_elite: int, generations: int,
-    shape: tuple[int, int] = (4,4)
+    mutation_rate: float, shape: tuple[int, int] = (4,4)
 ):
     start_maze = Maze(gen_matrix(*shape))
-    initial_pop = gen_init_pop(start_maze, num_population, 0.1)
+    initial_pop = gen_init_pop(start_maze, num_population, 0.3)
     
     best_ret_mazes = []
     
@@ -100,7 +100,7 @@ def run(
             ret_maze = crossover(first_maze, second_maze)
             
             for maze in ret_maze:
-                mutate(maze, 0.1)
+                mutate(maze, mutation_rate)
             
             new_generation.extend(ret_maze)
 
@@ -110,7 +110,7 @@ def run(
 
 
 if __name__ == '__main__':
-    run(100, 10, 3)
+    run(100, 10, 100, 0.1, shape=(50, 40))
     
     maze1 = Maze([[1,1], [1,1]])
     maze2 = Maze([[0,0], [0,0]])
