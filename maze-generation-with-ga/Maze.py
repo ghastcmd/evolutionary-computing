@@ -85,9 +85,7 @@ class Maze:
         stack.append((vert, 1))
         
         while (len(stack)):
-            s = stack.pop()
-            depth = s[1]
-            s = s[0]
+            s, depth = stack.pop()
             
             if not visited[s]:
                 visited[s] = True
