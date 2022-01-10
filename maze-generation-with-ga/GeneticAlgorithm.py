@@ -71,9 +71,9 @@ def run(
     
     best_ret_mazes = []
     
-    for _ in range(generations):
-        population = initial_pop
-        
+    population = initial_pop
+    
+    for _ in range(generations):    
         scored_mazes = []
         for maze in population:
             score = fitness(maze)
@@ -100,7 +100,7 @@ def run(
             ret_maze = crossover(first_maze, second_maze)
             
             for maze in ret_maze:
-                mutate(maze, 0.2)
+                mutate(maze, 0.1)
             
             new_generation.extend(ret_maze)
 
