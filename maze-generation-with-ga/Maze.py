@@ -81,14 +81,14 @@ class Maze:
     def dfs(self, graph, vert, depths):
         visited = [False] * self.width * self.height
         
-        stack = []
-        stack.append((vert, 1))
+        stack = [(vert, 1)]
         
         while (len(stack)):
-            s, depth = stack.pop()
+            s, depth = stack.pop(0)
             
             if not visited[s]:
                 visited[s] = True
+                stack.append((s, depth))
             
             for child in graph[s]:
                 if self.get_pos(child) == -1:
@@ -97,6 +97,7 @@ class Maze:
                 
                 if not visited[child]:
                     stack.append((child, depth+1))
+            
     
     # It returns 0 if the maze is invalid
     def is_valid(self):

@@ -110,7 +110,16 @@ def run(
 
 
 if __name__ == '__main__':
-    run(100, 10, 100, 0.1, shape=(50, 40))
+    run(100, 10, 10, 0.1)
+    
+    simple_maze = Maze([[-2, 0, 0,  0],
+          [ 0, 0, 0,  1],
+          [ 0, 1, 1, -1],
+          [ 0, 0, 0,  0]])
+    
+    fit_val = fitness(simple_maze)
+    assert fit_val == 10
+    
     
     maze1 = Maze([[1,1], [1,1]])
     maze2 = Maze([[0,0], [0,0]])
