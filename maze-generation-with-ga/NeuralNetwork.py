@@ -70,3 +70,27 @@ CORRIDOR_ALL_SIDE_SN = ShapesNet(
          [ 1,  1,  1]]
     ]
 )
+
+if __name__ == '__main__':
+    test_mat = [
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+    ]
+    
+    result = DEAD_END_ALL_SIDE_SN.infer(test_mat)
+    assert result == False
+    
+    test_mat[2][1] = 0
+    
+    result = DEAD_END_ALL_SIDE_SN.infer(test_mat)
+    assert result == True
+    
+    result = CORRIDOR_ALL_SIDE_SN.infer(test_mat)
+    assert result == False
+
+    test_mat[0][1] = 0
+    result = CORRIDOR_ALL_SIDE_SN.infer(test_mat)
+    assert result == True
+    
+    print('All tests passed')
