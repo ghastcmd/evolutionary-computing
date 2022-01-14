@@ -88,7 +88,6 @@ class Maze:
             
             if not visited[s]:
                 visited[s] = True
-                stack.append((s, depth))
             
             for child in graph[s]:
                 if self.get_pos(child) == -1:
