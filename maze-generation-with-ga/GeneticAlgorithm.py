@@ -108,7 +108,7 @@ def run(
     
     population = initial_pop
     
-    for gen in range(generations - (generations - total)):
+    for gen in range(1, generations - (generations - total) + 1):
         scored_mazes = []
         for maze in population:
             score = fitness(maze)
