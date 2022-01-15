@@ -84,7 +84,7 @@ class Maze:
         stack = [(vert, 1)]
         
         while (len(stack)):
-            s, depth = stack.pop(0)
+            s, depth = stack.pop()
             
             if not visited[s]:
                 visited[s] = True
@@ -97,6 +97,25 @@ class Maze:
                 if not visited[child]:
                     stack.append((child, depth+1))
             
+    def bfs(self, graph, vert, depths):
+        visited = [False] * self.width * self.height
+        visited[vert] = True
+        
+        queue = [(vert, 1)]
+        depth = 1
+        
+        while len(queue):
+            s, depth = queue.pop(0)
+            
+            for child in graph[s]:
+                if not visited[child]:
+                    if self.get_pos(child) == -1:
+                        depths.append(depth)
+                        break
+
+                    queue.append((child, depth+1))
+                    visited[child] = True
+        
     
     # It returns 0 if the maze is invalid
     def is_valid(self):
@@ -105,7 +124,7 @@ class Maze:
         depths = []
         start_vert = self.start_pos[0] * self.width + self.start_pos[1]
         
-        self.dfs(graph, start_vert, depths)
+        self.bfs(graph, start_vert, depths)
         
         if depths == []:
             ret_value = 0

@@ -148,15 +148,15 @@ def run(
 
 if __name__ == '__main__':
     simple_maze = Maze([[-2, 0, 0,  0],
-          [ 0, 0, 0,  1],
-          [ 0, 1, 1, -1],
-          [ 0, 0, 0,  0]])
+                        [ 0, 0, 0,  1],
+                        [ 0, 1, 1, -1],
+                        [ 0, 0, 0,  0]])
     
     fit_val = fitness(simple_maze)
-    assert fit_val == 10
+    assert fit_val == 8.5
     
-    for i in range(1, 10):
-      mazes = run(100, 10, 10, 0.1, quantity=i)
+    for i in range(1, 20):
+      mazes = run(100, 10, 20, 0.1, quantity=i)
       
       assert i == len(mazes)
     
