@@ -93,8 +93,14 @@ def gen_init_pop(start_maze: Maze, num_pop: int, mutate_rate: float = 0.3):
 
 def run(
     num_population: int, num_elite: int, generations: int,
-    mutation_rate: float, shape: tuple[int, int] = (4,4)
+    mutation_rate: float, shape: tuple[int, int] = (4,4),
+    verbose: bool = False, quantity: int = 1
 ):
+    assert quantity <= generations
+    
+    steps = generations // quantity
+    total = steps * quantity
+    
     start_maze = Maze(gen_matrix(*shape))
     initial_pop = gen_init_pop(start_maze, num_population, 0.3)
     
@@ -102,7 +108,7 @@ def run(
     
     population = initial_pop
     
-    for _ in range(generations):    
+    for gen in range(generations - (generations - total)):
         scored_mazes = []
         for maze in population:
             score = fitness(maze)
@@ -111,10 +117,12 @@ def run(
         scored_mazes.sort(key=lambda x: x[0])
         scored_mazes.reverse()
         
-        print('#### The best maze was ####')
-        print(f'Score: {scored_mazes[0][0]},\n{scored_mazes[0][1]}')
-        print('############\n')
-        best_ret_mazes.append(scored_mazes[0][1])
+        if verbose:
+            print('#### The best maze was ####')
+            print(f'Score: {scored_mazes[0][0]},\n{scored_mazes[0][1]}')
+            print('############\n')
+        if gen % steps == 0:
+            best_ret_mazes.append(scored_mazes[0][1])
 
         best_mazes = scored_mazes[:num_elite]
 
@@ -147,6 +155,10 @@ if __name__ == '__main__':
     fit_val = fitness(simple_maze)
     assert fit_val == 10
     
+    for i in range(1, 10):
+      mazes = run(100, 10, 10, 0.1, quantity=i)
+      
+      assert i == len(mazes)
     
     maze1 = Maze([[1,1], [1,1]])
     maze2 = Maze([[0,0], [0,0]])
