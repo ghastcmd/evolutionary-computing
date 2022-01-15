@@ -65,6 +65,9 @@ class Maze:
         
         return graph
 
+    def __iter__(self):
+        return iter(self.maze)
+
     def __str__(self):
         ret_str = ''
         for line in self.maze:
@@ -96,7 +99,8 @@ class Maze:
                 
                 if not visited[child]:
                     stack.append((child, depth+1))
-            
+    
+    # Standard BFS with depth caching
     def bfs(self, graph, vert, depths):
         visited = [False] * self.width * self.height
         visited[vert] = True
