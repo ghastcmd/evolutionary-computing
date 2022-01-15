@@ -1,6 +1,33 @@
 from Maze import Maze
 import random
 
+from NeuralNetwork import DEAD_END_ALL_SIDE_SN, CORRIDOR_ALL_SIDE_SN
+
+def slice_3x3_matrix(mat: list[list], i: int, j: int):
+    return [
+        mat[i][j:j+3],
+        mat[i+1][j:j+3],
+        mat[i+2][j:j+3]
+    ]
+
+DEAD_END_VALUE = 1
+CORRIDOR_VALUE = 0.5
+BLOCK_CELL_VALUE = 0.5
+
+def pass_thru_maze(maze: Maze) -> int:
+    values_sum: float = 0
+    
+    for y in range(len(maze.maze) - 2):
+        for x in range(len(maze.maze[0]) - 2):
+            pass_window = slice_3x3_matrix(maze.maze, y, x)
+            
+            has_dead_end = DEAD_END_ALL_SIDE_SN.infer(pass_window)
+            has_corridor = CORRIDOR_ALL_SIDE_SN.infer(pass_window)
+    
+            values_sum += int(has_dead_end) * DEAD_END_VALUE + int(has_corridor) * CORRIDOR_VALUE
+
+    return values_sum
+
 def fitness(maze: Maze) -> int:
     fit_value = 0
     max_path = maze.is_valid()
@@ -10,12 +37,14 @@ def fitness(maze: Maze) -> int:
         
     fit_value += max_path
     
+    patterns_values = pass_thru_maze(maze)
+    
     for line in maze.maze:
         for value in line:
             if value == 1:
-                fit_value += 1
+                fit_value += BLOCK_CELL_VALUE
     
-    return fit_value
+    return fit_value + patterns_values
 
 def crossover(maze1: Maze, maze2: Maze) -> tuple[Maze, Maze]:
     assert maze1.height == maze2.height
