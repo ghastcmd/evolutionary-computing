@@ -34,13 +34,14 @@ class Maze:
     def generate_graph(self):
         graph = []
         
+        if self.graph != []:
+            return self.graph
+        
         for y in range(self.height):
             for x in range(self.width):
                 if self.maze[y][x] == 1:
                     graph.append([])
                     continue
-                
-                current_pos = y * self.width + x
                 
                 up = (y - 1) * self.width + x
                 right = y * self.width + x + 1
@@ -62,6 +63,8 @@ class Maze:
                     append_value.append(right)
                 
                 graph.append(append_value)
+        
+        self.graph = graph
         
         return graph
 
