@@ -1,4 +1,4 @@
-from GeneticAlgorithm import run
+from MazeGeneration.GeneticAlgorithm import run
 
 def get_levels(quantity: int = 2, step: int = 2):
    max_gen = quantity * step

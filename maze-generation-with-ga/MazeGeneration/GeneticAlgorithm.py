@@ -1,7 +1,7 @@
-from Maze import Maze
+from MazeGeneration.Maze import Maze
 import random
 
-from NeuralNetwork import DEAD_END_ALL_SIDE_SN, CORRIDOR_ALL_SIDE_SN
+from MazeGeneration.NeuralNetwork import DEAD_END_ALL_SIDE_SN, CORRIDOR_ALL_SIDE_SN
 
 def slice_3x3_matrix(mat: list[list], i: int, j: int):
     return [

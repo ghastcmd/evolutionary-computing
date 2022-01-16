@@ -9,6 +9,8 @@ class Maze:
         self.height = len(maze)
         self.width = len(maze[0])
 
+        self.graph = []
+
         self.start_pos = (0,0)
         if start != (0,0):
             self.start_pos = start
