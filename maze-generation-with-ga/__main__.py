@@ -1,7 +1,5 @@
-# from medieval_maze.singlePlayer import main
+from MedievalMaze.singlePlayer import main
 
-from MazeGeneration.MainFunction import get_levels
+# from MazeGeneration.MainFunction import get_levels
 
-get_levels(2)
-
-# main()
+main()
