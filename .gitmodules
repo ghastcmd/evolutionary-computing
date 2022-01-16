@@ -1,3 +1,6 @@
 [submodule "exercises/1 recognize shapes/java"]
 	path = exercises/1 recognize shapes/java
 	url = https://github.com/DaniloVFreire/Perceptron-for-binary-matrix-shape-recognition
+[submodule "maze-generation-with-ga/medieval-maze"]
+	path = maze-generation-with-ga/medieval_maze
+	url = https://github.com/laellsr/medievalmaze/

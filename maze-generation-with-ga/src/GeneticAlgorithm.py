@@ -39,7 +39,7 @@ def fitness(maze: Maze) -> int:
     
     patterns_values = pass_thru_maze(maze)
     
-    for line in maze.maze:
+    for line in maze:
         for value in line:
             if value == 1:
                 fit_value += BLOCK_CELL_VALUE
@@ -134,12 +134,12 @@ def run(
             first_maze = random.choice(best_mazes)[1].copy()
             second_maze = random.choice(best_mazes)[1].copy()
 
-            ret_maze = crossover(first_maze, second_maze)
+            ret_mazes = crossover(first_maze, second_maze)
             
-            for maze in ret_maze:
+            for maze in ret_mazes:
                 mutate(maze, mutation_rate)
             
-            new_generation.extend(ret_maze)
+            new_generation.extend(ret_mazes)
 
         population = new_generation
 
