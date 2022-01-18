@@ -10,9 +10,10 @@ def slice_3x3_matrix(mat: list[list], i: int, j: int):
         mat[i+2][j:j+3]
     ]
 
-DEAD_END_VALUE = 1
-CORRIDOR_VALUE = 0.5
+DEAD_END_VALUE = 10
+CORRIDOR_VALUE = 5
 BLOCK_CELL_VALUE = 0.5
+PATH_LENGTH_VALUE = 1
 
 def pass_thru_maze(maze: Maze) -> int:
     values_sum: float = 0
@@ -35,7 +36,7 @@ def fitness(maze: Maze) -> int:
     if max_path == 0:
         fit_value -= maze.width * maze.height
         
-    fit_value += max_path
+    fit_value += max_path * PATH_LENGTH_VALUE
     
     patterns_values = pass_thru_maze(maze)
     

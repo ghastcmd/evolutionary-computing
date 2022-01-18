@@ -1,8 +1,8 @@
 from MazeGeneration.GeneticAlgorithm import run
 
-def get_levels(quantity: int = 2, step: int = 2):
+def get_levels(quantity: int = 2, step: int = 3):
    max_gen = quantity * step
-   return run(100, 10, max_gen, 0.1, shape=(12, 48), quantity=quantity)
+   return run(110, 10, max_gen, 0.05, shape=(12, 48), quantity=quantity)
 
 if __name__ == '__main__':
    mazes = get_levels(2)
