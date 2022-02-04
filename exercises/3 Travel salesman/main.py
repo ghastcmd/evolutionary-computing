@@ -26,12 +26,12 @@ def generate_genome(citys_quantity = 5):
   genome = '0'# defining the start city
   while len(genome) != citys_quantity:
     random_city = str(randint(1, (citys_quantity - 1)))
-    if did_repeat_that_city(genome, random_city) == False:
+    if if_city_in_genoma(genome, random_city) == False:
       genome += random_city
   return genome
 
 #check if the string repeat a city
-def did_repeat_that_city(genome, city):
+def if_city_in_genoma(genome, city):
   for i in genome:
     if i == city:
       return True
