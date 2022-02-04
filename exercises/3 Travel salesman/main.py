@@ -12,20 +12,20 @@ class Individual:
     return self.score > other.score
 
 #Generating the inicial population
-def generate_initial_population(population_size, population, citys_quantity, citys_distance_matrix):
+def generate_initial_population(population_size, population, cities_quantity, cities_distance_matrix):
   individual = Individual()
   for i in range(population_size):
     individual = Individual()
-    individual.genome = generate_genome(citys_quantity)
-    individual.score = calculate_score(individual.genome, citys_distance_matrix)
+    individual.genome = generate_genome(cities_quantity)
+    individual.score = calculate_score(individual.genome, cities_distance_matrix)
     population.append(individual)
   return population
 
-#Generates a random genome witou repeating citys
-def generate_genome(citys_quantity = 5):
+#Generates a random genome witou repeating cities
+def generate_genome(cities_quantity = 5):
   genome = '0'# defining the start city
-  while len(genome) != citys_quantity:
-    random_city = str(randint(1, (citys_quantity - 1)))
+  while len(genome) != cities_quantity:
+    random_city = str(randint(1, (cities_quantity - 1)))
     if if_city_in_genoma(genome, random_city) == False:
       genome += random_city
   return genome
@@ -38,19 +38,19 @@ def if_city_in_genoma(genome, city):
   return False
 
 #calculate the score of the path defined by the gene
-def calculate_score(genome, citys_distance_matrix):
+def calculate_score(genome, cities_distance_matrix):
   path_size = 0
   for i in range(len(genome)-1):
-    path_size += citys_distance_matrix[int(genome[i])][int(genome[i+1])]
+    path_size += cities_distance_matrix[int(genome[i])][int(genome[i+1])]
   return path_size
 
 # Generate new genomes based on iversion teory
-# def invert_genome(genome,citys_quantity, probability = 0.5):
+# def invert_genome(genome,cities_quantity, probability = 0.5):
 #   if randrange(0,1) <=probability:
 #     while True:
 #       genome_slice = []
-#       genome_slice.append(randint(1, citys_quantity))
-#       genome_slice.append(randint(1, citys_quantity))
+#       genome_slice.append(randint(1, cities_quantity))
+#       genome_slice.append(randint(1, cities_quantity))
 #       if genome_slice[0] != genome_slice[1]:
 #         break
 #     genome_slice.sort()
@@ -58,12 +58,12 @@ def calculate_score(genome, citys_distance_matrix):
     # value2 = genome[genome_slice[1]-1:genome_slice[0]-1:-1]
 
 # swap genome value
-def swap_genome(genome,citys_quantity, probability = 0.5):
+def swap_genome(genome,cities_quantity, probability = 0.5):
   if randrange(0,1) <=probability:
     genome = list(genome)
     while True:
-      position1 = randint(1, citys_quantity-1)
-      position2 = randint(1, citys_quantity-1)
+      position1 = randint(1, cities_quantity-1)
+      position2 = randint(1, cities_quantity-1)
       if position1 != position2:
         #swap for 2 variables
         genome[position1], genome[position2]  = genome[position2], genome[position1]
@@ -87,7 +87,7 @@ if __name__ == "__main__":
   if with_external_input:
 
     print("Quantidade de cidades:")
-    citys_quantity = int(input())
+    cities_quantity = int(input())
 
     print("Tamanho da população inicial:")
     population_size = int(input())
@@ -95,15 +95,15 @@ if __name__ == "__main__":
     print("Quantidade de gerações:")
     generations_quantity = int(input())
 
-    citys_distance_matrix =[]
+    cities_distance_matrix =[]
     print("matriz distancia das cidades")
-    for i in range(citys_quantity):
-      citys_distance_matrix.append(list(map(int, input().split())))
+    for i in range(cities_quantity):
+      cities_distance_matrix.append(list(map(int, input().split())))
   else:
-    citys_quantity = 5
+    cities_quantity = 5
     generations_quantity = 100
     population_size = 10
-    citys_distance_matrix=[
+    cities_distance_matrix=[
           [0, 2, 3, 12, 5],
           [2, 0, 4, 8, 4],
           [17, 4, 0, 3, 3],
@@ -112,7 +112,7 @@ if __name__ == "__main__":
       ]
 
   population = []
-  population = generate_initial_population(population_size, population, citys_quantity, citys_distance_matrix)
+  population = generate_initial_population(population_size, population, cities_quantity, cities_distance_matrix)
 
   if verbose:
     print("inicial population = individual score")
@@ -128,8 +128,8 @@ if __name__ == "__main__":
         print(str(i) +" "+ population[i].genome + ' ' + str(population[i].score))
     for i in range(population_size):
       temp_genome = Individual()
-      temp_genome.genome = swap_genome(population[i].genome, citys_quantity)
-      temp_genome.score = calculate_score(temp_genome.genome, citys_distance_matrix)
+      temp_genome.genome = swap_genome(population[i].genome, cities_quantity)
+      temp_genome.score = calculate_score(temp_genome.genome, cities_distance_matrix)
       population.append(temp_genome)
     population.sort()
 
