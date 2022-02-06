@@ -57,7 +57,7 @@ def swap_genome(genome,cities_quantity, probability = 0.5):
             position1 = randint(1, cities_quantity-1)
             position2 = randint(1, cities_quantity-1)
             if position1 != position2:
-                #swap for 2 variables
+                # Swap for 2 variables
                 genome[position1], genome[position2]    = genome[position2], genome[position1]
                 break
         return ''.join(genome)
@@ -68,12 +68,57 @@ def elitist_selection(population, population_size):
     for i in range(population_size):
         new_population.append(population[i])
     return new_population
+
+# The function that runs the genetic algorithm
+def genetic_algorithm(
+    cities_quantity: int,
+    generations_quantity: int,
+    population_size: int,
+    cities_distance_matrix: list[list],
+    verbose: bool = False
+) -> None:
+    population = []
+    population = generate_initial_population(population_size, population, cities_quantity, cities_distance_matrix)
+
+    if verbose:
+        print("Initial population | individual score")
+        for i in range(len(population)):
+            print(f'{i} {population[i].genome} {population[i].score}')
+
+    #generating mutations and evolving the population
+    population.sort()
+    for i in range(generations_quantity):
+        
+        if verbose:
+            print(f'==== Best Individual ====\n{population[i].genome} {population[i].score}')
+        
+        # Removed useless information (entire population from each generation)
+        # if verbose:
+        #     print("sorting result")
+        #     for i in range(len(population)):
+        #         print(f'{i} {population[i].genome} {population[i].score}')
+        
+        for i in range(population_size):
+            temp_genome = Individual()
+            temp_genome.genome = swap_genome(population[i].genome, cities_quantity)
+            temp_genome.score = calculate_score(temp_genome.genome, cities_distance_matrix)
+            population.append(temp_genome)
+        population.sort()
+
+        #elitist selection
+        population = elitist_selection(population, population_size)
+    
+    print("Final population = individual score")
+    for i in range(len(population)):
+        print(f'{i} {population[i].genome} {population[i].score}')
+
+
 #Starting main
 if __name__ == "__main__":
 
     #select the mode
     with_external_input = False
-    verbose = False
+    verbose = True
 
     #Defining the initial values
     if with_external_input:
@@ -103,31 +148,7 @@ if __name__ == "__main__":
                     [5, 5, 3, 10, 0],
             ]
 
-    population = []
-    population = generate_initial_population(population_size, population, cities_quantity, cities_distance_matrix)
-
-    if verbose:
-        print("inicial population = individual score")
-        for i in range(len(population)):
-            print(str(i) +" "+ population[i].genome + ' ' + str(population[i].score))
-
-    #generating mutations and evolving the population
-    population.sort()
-    for i in range(generations_quantity):
-        if verbose:
-            print("sorting result")
-            for i in range(len(population)):
-                print(str(i) +" "+ population[i].genome + ' ' + str(population[i].score))
-        for i in range(population_size):
-            temp_genome = Individual()
-            temp_genome.genome = swap_genome(population[i].genome, cities_quantity)
-            temp_genome.score = calculate_score(temp_genome.genome, cities_distance_matrix)
-            population.append(temp_genome)
-        population.sort()
-
-        #elitist selection
-        population = elitist_selection(population, population_size)
-    
-    print("Final population = individual score")
-    for i in range(len(population)):
-        print(str(i) +" "+ population[i].genome + ' ' + str(population[i].score))
+    genetic_algorithm(
+        cities_quantity, generations_quantity, population_size,
+        cities_distance_matrix, verbose
+    )
