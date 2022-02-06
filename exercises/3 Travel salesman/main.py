@@ -1,6 +1,6 @@
 from random import randint, randrange
 import random
-from tracemalloc import start
+import math
 
 class Individual:
     def __init__(self)->None:
@@ -14,12 +14,12 @@ class Individual:
         return self.score > other.score
 
 # Generating the inicial population
-def generate_initial_population(population_size, population, cities_quantity, cities_distance_matrix):
+def generate_initial_population(population_size, population, cities_quantity, cities_coordinates):
     individual = Individual()
     for _ in range(population_size):
         individual = Individual()
         individual.genome = generate_genome(0, cities_quantity)
-        individual.score = calculate_score(individual.genome, cities_distance_matrix)
+        individual.score = calculate_score(individual.genome, cities_coordinates)
         population.append(individual)
     return population
 
@@ -34,18 +34,19 @@ def generate_genome(initial: int, cities_quantity = 5) -> str:
     
     return genome
 
-# Check if the string repeat a city
-def if_city_in_genoma(genome, city):
-    for i in genome:
-        if i == city:
-            return True
-    return False
+def euclidean_distance(point1: tuple[int], point2: tuple[int]):
+    ret_value: float = 0
+    for i, j in zip(point1, point2):
+        ret_value += (i - j) ** 2
+    return math.sqrt(ret_value)
+
 
 # Calculate the score of the path defined by the gene
-def calculate_score(genome, cities_distance_matrix):
+def calculate_score(genome, cities_coodinates: list[tuple[int, int]]):
     path_size = 0
     for i in range(len(genome)-1):
-        path_size += cities_distance_matrix[int(genome[i])][int(genome[i+1])]
+        path_size += euclidean_distance(cities_coordinates[int(genome[i])], 
+                                        cities_coordinates[int(genome[i+1])])
     return path_size
 
 
@@ -74,11 +75,11 @@ def genetic_algorithm(
     cities_quantity: int,
     generations_quantity: int,
     population_size: int,
-    cities_distance_matrix: list[list],
+    cities_coordinates: list[tuple[int, int]],
     verbose: bool = False
 ) -> None:
     population = []
-    population = generate_initial_population(population_size, population, cities_quantity, cities_distance_matrix)
+    population = generate_initial_population(population_size, population, cities_quantity, cities_coordinates)
 
     if verbose:
         print("Initial population | individual score")
@@ -87,35 +88,32 @@ def genetic_algorithm(
 
     #generating mutations and evolving the population
     population.sort()
+    population.reverse()
+    
     for i in range(generations_quantity):
         
         if verbose:
-            print(f'==== Best Individual ====\n{population[i].genome} {population[i].score}')
-        
-        # Removed useless information (entire population from each generation)
-        # if verbose:
-        #     print("sorting result")
-        #     for i in range(len(population)):
-        #         print(f'{i} {population[i].genome} {population[i].score}')
+            print(f'==== Best Individual Gen# {i} ====\n{population[0].genome} {population[0].score}')
         
         for i in range(population_size):
             temp_genome = Individual()
             temp_genome.genome = swap_genome(population[i].genome, cities_quantity)
-            temp_genome.score = calculate_score(temp_genome.genome, cities_distance_matrix)
+            temp_genome.score = calculate_score(temp_genome.genome, cities_coordinates)
             population.append(temp_genome)
+        
         population.sort()
+        population.reverse()
 
         #elitist selection
         population = elitist_selection(population, population_size)
     
-    print("Final population = individual score")
+    print("Final population | individual score")
     for i in range(len(population)):
         print(f'{i} {population[i].genome} {population[i].score}')
 
 
-#Starting main
+# Starting main
 if __name__ == "__main__":
-
     #select the mode
     with_external_input = False
     verbose = True
@@ -138,17 +136,24 @@ if __name__ == "__main__":
             cities_distance_matrix.append(list(map(int, input().split())))
     else:
         cities_quantity = 5
-        generations_quantity = 100
+        generations_quantity = 10
         population_size = 10
-        cities_distance_matrix=[
-                    [0, 2, 3, 12, 5],
-                    [2, 0, 4, 8, 4],
-                    [17, 4, 0, 3, 3],
-                    [12, 8, 3, 0, 10],
-                    [5, 5, 3, 10, 0],
-            ]
+        cities_coordinates = [
+            (1, 0),
+            (23, -2),
+            (11, -31),
+            (-1, 5),
+            (20, 20),
+        ]
+        # cities_distance_matrix=[
+        #             [0, 2, 3, 12, 5],
+        #             [2, 0, 4, 8, 4],
+        #             [17, 4, 0, 3, 3],
+        #             [12, 8, 3, 0, 10],
+        #             [5, 5, 3, 10, 0],
+        #     ]
 
     genetic_algorithm(
         cities_quantity, generations_quantity, population_size,
-        cities_distance_matrix, verbose
+        cities_coordinates, verbose
     )
