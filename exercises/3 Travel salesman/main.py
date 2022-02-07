@@ -10,6 +10,9 @@ class Individual:
     def __str__(self):
         return f'{self.genome}'
     
+    def __eq__(self, other):
+        return self.genome == other.genome
+    
     def __lt__(self, other):
         return self.score < other.score
     

@@ -10,15 +10,9 @@ import copy
 
 from main import genetic_algorithm
 
-def contains(val, norm_list):
-    for it in norm_list:
-        if val.genome == it.genome:
-            return True
-    return False
-
 def remove_duplicate(population):
     for ind in population:
-        if contains(ind, population):
+        if ind in population:
             population[:] = list(
                 filter(lambda a: a.genome != ind.genome, population)
             )
@@ -32,7 +26,7 @@ if __name__ == '__main__':
         (20, 20),
     ]
     
-    num_generations = 5
+    num_generations = 10
     
     pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2)
     
@@ -51,6 +45,16 @@ if __name__ == '__main__':
         to_push = copy.deepcopy(test_case)
         remove_duplicate(to_push)
         overall.append(to_push)
+    
+    print('Current')
+    for pop in current:
+        print(*pop, sep='\n')
+        print('')
+        
+    print('Overall')
+    for pop in overall:
+        print(*pop, sep='\n')
+        print('')
     
     print('Plotting the graphs...')
 
