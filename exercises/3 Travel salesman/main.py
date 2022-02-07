@@ -73,17 +73,19 @@ def elitist_selection(population, elitist_number):
 
 # The function that runs the genetic algorithm
 def genetic_algorithm(
-    cities_quantity: int,
     generations_quantity: int,
     population_size: int,
     cities_coordinates: list[tuple[int, int]],
     elitist_number: int,
     verbose: bool = False
 ) -> list[list[Individual]]:
+    cities_quantity = len(cities_coordinates)
+    
     POPULATION_LIST = []
 
     population = []
     population = generate_initial_population(population_size, population, cities_quantity, cities_coordinates)
+
 
     if verbose:
         print("Initial population | individual score")
@@ -139,7 +141,6 @@ if __name__ == "__main__":
         for i in range(cities_quantity):
             cities_distance_matrix.append(list(map(int, input().split())))
     else:
-        cities_quantity = 5
         generations_quantity = 10
         population_size = 10
         cities_coordinates = [
@@ -158,6 +159,6 @@ if __name__ == "__main__":
         #     ]
 
     genetic_algorithm(
-        cities_quantity, generations_quantity, population_size,
+        generations_quantity, population_size,
         cities_coordinates, population_size // 10, verbose
     )
