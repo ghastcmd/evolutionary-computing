@@ -6,10 +6,11 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import copy
 
 from main import genetic_algorithm
 
-def not_in(val, norm_list):
+def contains(val, norm_list):
     for it in norm_list:
         if val.genome == it.genome:
             return True
@@ -17,10 +18,10 @@ def not_in(val, norm_list):
 
 def remove_duplicate(population):
     for ind in population:
-        if not_in(ind, population):
-            population.remove(ind)
-
-from main import Individual
+        if contains(ind, population):
+            population[:] = list(
+                filter(lambda a: a.genome != ind.genome, population)
+            )
 
 if __name__ == '__main__':
     cities_coordinates = [
@@ -35,38 +36,24 @@ if __name__ == '__main__':
     
     pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2)
     
-    # pop_list = []
     
-    current = pop_list.copy()
-    
+    # This part is to make by each population
+    current = copy.deepcopy(pop_list)    
     for pop in current:
         remove_duplicate(pop)
     
-    print('Printing the current list')
-    
-    for pop in current:
-        for ind in pop:
-            print(ind.genome)
-        print('')
-    
+    # This part is to make accumulated population
     overall = []
-    
     test_case = []
     for pop in pop_list:
         for ind in pop:
             test_case.append(ind)
-        to_push = test_case.copy()
+        to_push = copy.deepcopy(test_case)
         remove_duplicate(to_push)
         overall.append(to_push)
     
-    print('Printing the overall list')
-    
-    for pop in overall:
-        print('a')
-        for ind in pop:
-            print(ind.genome)
-        print('')
-    
+    print('Plotting the graphs...')
+
     X = []
     Y = []
     print(len(current))
