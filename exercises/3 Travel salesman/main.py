@@ -94,7 +94,6 @@ def genetic_algorithm(
 
     for i in range(generations_quantity):
         population.sort()
-        population.reverse()
         
         POPULATION_LIST.append(population.copy())
         
