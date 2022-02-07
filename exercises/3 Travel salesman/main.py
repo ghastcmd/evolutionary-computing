@@ -42,7 +42,7 @@ def euclidean_distance(point1: tuple[int], point2: tuple[int]):
 
 
 # Calculate the score of the path defined by the gene
-def calculate_score(genome, cities_coodinates: list[tuple[int, int]]):
+def calculate_score(genome, cities_coordinates: list[tuple[int, int]]):
     path_size = 0
     for i in range(len(genome)-1):
         path_size += euclidean_distance(cities_coordinates[int(genome[i])], 
