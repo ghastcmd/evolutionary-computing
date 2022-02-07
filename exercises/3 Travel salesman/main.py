@@ -94,19 +94,19 @@ def genetic_algorithm(
         population.sort()
         population.reverse()
         
-        #elitist selection
-        population = elitist_selection(population, elitist_number)
-        
         if verbose:
             print(f'==== Best Individual Gen# {i} ====\n{population[0].genome} {population[0].score}')
         
+        #elitist selection
+        population = elitist_selection(population, elitist_number)
+        
         for i in range(population_size):
             temp_genome = Individual()
-            temp_genome.genome = swap_genome(population[i].genome, cities_quantity)
+            rand_choice = random.choice(population)
+            temp_genome.genome = swap_genome(rand_choice.genome, cities_quantity)
             temp_genome.score = calculate_score(temp_genome.genome, cities_coordinates)
             population.append(temp_genome)
-        
-    
+
     print("Final population | individual score")
     for i in range(len(population)):
         print(f'{i} {population[i].genome} {population[i].score}')
