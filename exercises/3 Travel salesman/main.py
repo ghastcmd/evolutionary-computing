@@ -7,6 +7,9 @@ class Individual:
         self.genome = ''
         self.score = 0
     
+    def __str__(self):
+        return f'{self.genome}'
+    
     def __lt__(self, other):
         return self.score < other.score
     
