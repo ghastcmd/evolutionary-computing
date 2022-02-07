@@ -64,10 +64,11 @@ def swap_genome(genome,cities_quantity, probability = 0.5):
         return ''.join(genome)
 
 
-def elitist_selection(population, population_size):
-    new_population = []
-    for i in range(population_size):
-        new_population.append(population[i])
+def elitist_selection(population, elitist_number):
+    new_population = population[:elitist_number]
+    # for i in range(population_size):
+    #     new_population.append(population[i])
+    
     return new_population
 
 # The function that runs the genetic algorithm
@@ -76,8 +77,11 @@ def genetic_algorithm(
     generations_quantity: int,
     population_size: int,
     cities_coordinates: list[tuple[int, int]],
+    elitist_number: int,
     verbose: bool = False
-) -> None:
+) -> list[list[Individual]]:
+    POPULATION_LIST = []
+
     population = []
     population = generate_initial_population(population_size, population, cities_quantity, cities_coordinates)
 
@@ -86,11 +90,12 @@ def genetic_algorithm(
         for i in range(len(population)):
             print(f'{i} {population[i].genome} {population[i].score}')
 
-    #generating mutations and evolving the population
-    population.sort()
-    population.reverse()
-    
     for i in range(generations_quantity):
+        population.sort()
+        population.reverse()
+        
+        #elitist selection
+        population = elitist_selection(population, elitist_number)
         
         if verbose:
             print(f'==== Best Individual Gen# {i} ====\n{population[0].genome} {population[0].score}')
@@ -101,11 +106,6 @@ def genetic_algorithm(
             temp_genome.score = calculate_score(temp_genome.genome, cities_coordinates)
             population.append(temp_genome)
         
-        population.sort()
-        population.reverse()
-
-        #elitist selection
-        population = elitist_selection(population, population_size)
     
     print("Final population | individual score")
     for i in range(len(population)):
@@ -155,5 +155,5 @@ if __name__ == "__main__":
 
     genetic_algorithm(
         cities_quantity, generations_quantity, population_size,
-        cities_coordinates, verbose
+        cities_coordinates, population_size // 10, verbose
     )
