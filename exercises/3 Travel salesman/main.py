@@ -94,6 +94,8 @@ def genetic_algorithm(
         population.sort()
         population.reverse()
         
+        POPULATION_LIST.append(population.copy())
+        
         if verbose:
             print(f'==== Best Individual Gen# {i} ====\n{population[0].genome} {population[0].score}')
         
@@ -110,6 +112,8 @@ def genetic_algorithm(
     print("Final population | individual score")
     for i in range(len(population)):
         print(f'{i} {population[i].genome} {population[i].score}')
+
+    return POPULATION_LIST
 
 
 # Starting main
