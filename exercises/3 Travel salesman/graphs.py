@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import copy
 
-from main import genetic_algorithm
+from main import genetic_algorithm, generate_initial_population
 
 def remove_duplicate(population):
     for ind in population:
@@ -16,22 +16,9 @@ def remove_duplicate(population):
             population[:] = list(
                 filter(lambda a: a.genome != ind.genome, population)
             )
+            population.append(ind)
 
-if __name__ == '__main__':
-    cities_coordinates = [
-        (1, 0),
-        (23, -2),
-        (11, -31),
-        (-1, 5),
-        (20, 20),
-    ]
-    
-    num_generations = 10
-    
-    pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2)
-    
-    test = False
-    
+def generate_graphics(pop_list: list, solutions_graph: str, mean_graph: str):
     # This part is to make by each population
     current = copy.deepcopy(pop_list)    
     for pop in current:
@@ -69,6 +56,7 @@ if __name__ == '__main__':
         current_lens.append(len(cc))
         overall_lens.append(len(oo))
     
+    plt.clf()
     plt.plot(range(1, num_generations+1), current_lens, 
              color='purple', marker='o',
              label='Solutions per generation')
@@ -79,7 +67,7 @@ if __name__ == '__main__':
     plt.legend(loc='best')
     plt.xlabel('Generation')
     plt.ylabel('Num. of Solutions')
-    plt.savefig('solutions.png')
+    plt.savefig(solutions_graph)
 
     # ! THIS PART IS FOR MEAN AND BEST
 
@@ -105,4 +93,35 @@ if __name__ == '__main__':
     plt.legend(loc='best')
     plt.xlabel('Generation')
     plt.ylabel('Score')
-    plt.savefig('scores.png')
+    plt.savefig(mean_graph)
+
+if __name__ == '__main__':
+    # cities_coordinates = [
+    #     (1, 0),
+    #     (23, -2),
+    #     (11, -31),
+    #     (-1, 5),
+    #     (20, 20),
+    # ]
+    cities_coordinates = [
+        (1, 0),
+        (23, -2),
+        (11, -31),
+        (-1, 5),
+        (20, 20),
+        # (1, 1),
+        # (2, 3),
+        # (-20, 1),
+    ]
+    
+    num_generations = 10
+    
+    initial_population = generate_initial_population(10, cities_coordinates)
+    
+    pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2, control=True, init_pop=initial_population)
+    
+    generate_graphics(pop_list, 'solutions_control.png', 'mean_control.png')
+    
+    pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2, control=False, init_pop=initial_population)
+    
+    generate_graphics(pop_list, 'solutions_normal.png', 'mean_normal.png')
