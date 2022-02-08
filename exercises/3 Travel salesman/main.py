@@ -22,8 +22,10 @@ class Individual:
         return self.score > other.score
 
 # Generating the inicial population
-def generate_initial_population(population_size, population, cities_quantity, cities_coordinates):
+def generate_initial_population(population_size, cities_coordinates):
+    population = []
     individual = Individual()
+    cities_quantity = len(cities_coordinates)
     for _ in range(population_size):
         individual = Individual()
         individual.genome = generate_genome(0, cities_quantity)
@@ -108,14 +110,18 @@ def genetic_algorithm(
     cities_coordinates: list[tuple[int, int]],
     elitist_number: int,
     control = False,
-    verbose: bool = False
+    verbose: bool = False,
+    init_pop: list = []
 ) -> list[list[Individual]]:
     cities_quantity = len(cities_coordinates)
     
     POPULATION_LIST = []
     
     population = []
-    population = generate_initial_population(population_size, population, cities_quantity, cities_coordinates)
+    if init_pop == []:
+        population = generate_initial_population(population_size, cities_coordinates)
+    else:
+        population = init_pop
     
     if control:
         population.sort()
