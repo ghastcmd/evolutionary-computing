@@ -77,9 +77,6 @@ def hamming_distance(ind1: Individual, ind2: Individual) -> int:
     score /= len(ind1.genome)
     return score
 
-def crossover_muttrate(ind1: Individual, best: Individual, mut_rate: float):
-    return (hamming_distance(ind1, best) * mut_rate + 0.01 + ind1.mutation_rate) / 2
-
 def elitist_selection(population, elitist_number):
     new_population = population[:elitist_number]
     # for i in range(population_size):
@@ -92,9 +89,13 @@ def hamming_distance(ind1: Individual, ind2: Individual):
     str1 = list(ind1.genome)
     str2 = list(ind2.genome)
     for a, b in zip(str1, str2):
-        if a != b:
+        if a == b:
             score += 1
+    score /= len(str1)
     return score
+
+def crossover_muttrate(ind1: Individual, best: Individual, mut_rate: float):
+    return hamming_distance(ind1, best)
 
 def initialize_mutation_rates(population: list[Individual], max_mut_rate: float):
     min_max = population[-1].score - population[0].score
@@ -148,8 +149,8 @@ def genetic_algorithm(
         #elitist selection
         population = elitist_selection(population, elitist_number)
         
-        new_generation = []
-        for i in range(population_size):
+        # new_generation = []
+        for i in range(population_size - elitist_number):
             temp_genome = Individual()
             rand_choice = random.choice(population)
             if control:
@@ -161,9 +162,9 @@ def genetic_algorithm(
             else:
                 temp_genome.genome = swap_genome(rand_choice.genome, 0.25)
             temp_genome.score = calculate_score(temp_genome.genome, cities_coordinates)
-            new_generation.append(temp_genome)
+            population.append(temp_genome)
 
-        population = new_generation
+        # population = new_generation
 
     print("Final population | individual score")
     for i, ind in enumerate(population):
@@ -197,7 +198,7 @@ if __name__ == "__main__":
         for i in range(cities_quantity):
             cities_distance_matrix.append(list(map(int, input().split())))
     else:
-        generations_quantity = 100
+        generations_quantity = 10
         cities_coordinates = [
             (1, 0),
             (23, -2),
