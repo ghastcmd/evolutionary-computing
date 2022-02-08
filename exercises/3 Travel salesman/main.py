@@ -113,8 +113,6 @@ def genetic_algorithm(
     verbose: bool = False,
     init_pop: list = []
 ) -> list[list[Individual]]:
-    cities_quantity = len(cities_coordinates)
-    
     POPULATION_LIST = []
     
     population = []

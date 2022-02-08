@@ -50,8 +50,6 @@ def generate_graphics(pop_list: list, solutions_graph: str, mean_graph: str):
     # ! THIS PART IS FOR SOLUTIONS PER GENERATION
     current_lens = []
     overall_lens = []
-    print(len(current))
-    print(len(overall))
     for cc, oo in zip(current, overall):
         current_lens.append(len(cc))
         overall_lens.append(len(oo))
@@ -94,6 +92,8 @@ def generate_graphics(pop_list: list, solutions_graph: str, mean_graph: str):
     plt.xlabel('Generation')
     plt.ylabel('Score')
     plt.savefig(mean_graph)
+    
+    print('Finished plotting the graphs')
 
 if __name__ == '__main__':
     # cities_coordinates = [
@@ -119,6 +119,8 @@ if __name__ == '__main__':
     initial_population = generate_initial_population(10, cities_coordinates)
     
     pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2, control=True, init_pop=initial_population)
+    
+    test = False
     
     generate_graphics(pop_list, 'solutions_control.png', 'mean_control.png')
     
