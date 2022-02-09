@@ -1,6 +1,5 @@
-from random import randint, randrange
-import copy
 import random
+import copy
 import math
 
 class Individual:
@@ -50,7 +49,6 @@ def euclidean_distance(point1: tuple[int], point2: tuple[int]):
         ret_value += (i - j) ** 2
     return math.sqrt(ret_value)
 
-
 # Calculate the score of the path defined by the gene
 def calculate_score(genome, cities_coordinates: list[tuple[int, int]]):
     path_size = 0
@@ -59,23 +57,14 @@ def calculate_score(genome, cities_coordinates: list[tuple[int, int]]):
                                         cities_coordinates[int(genome[i+1])])
     return path_size
 
-
 # Swap genome value
-def swap_genome(genome: str, probability: float):
+def crossover(genome: str, probability: float):
     genome = list(genome)
     for i in range(1, len(genome)):
         j = random.randint(1, len(genome)-1)
         if random.uniform(0, 1) < probability:
             genome[i], genome[j] = genome[j], genome[i]
     return ''.join(genome)
-
-def hamming_distance(ind1: Individual, ind2: Individual) -> int:
-    score = 0
-    for a, b in zip(ind1.genome, ind2.genome):
-        if a != b:
-            score += 1
-    score /= len(ind1.genome)
-    return score
 
 def elitist_selection(population, elitist_number):
     new_population = population[:elitist_number]
@@ -84,25 +73,28 @@ def elitist_selection(population, elitist_number):
     
     return new_population
 
-def hamming_distance(ind1: Individual, ind2: Individual):
-    score = 0
-    str1 = list(ind1.genome)
-    str2 = list(ind2.genome)
-    for a, b in zip(str1, str2):
-        if a == b:
-            score += 1
-    score /= len(str1)
-    return score
-
-def crossover_muttrate(ind1: Individual, best: Individual, mut_rate: float):
-    return hamming_distance(ind1, best)
-
-def initialize_mutation_rates(population: list[Individual], max_mut_rate: float):
-    min_max = population[-1].score - population[0].score
-    min_score = population[0].score
+def crossover_muttrate(ind: Individual, best: Individual, worst: Individual, mut_rate: float):
+    score_rate = (worst.score - best.score) / worst.score
     
-    for ind in population:
-        ind.mutation_rate = ((ind.score - min_score+1) / min_max) * max_mut_rate
+    return (1 - score_rate) * mut_rate * ind.mutation_rate + mut_rate
+
+# def initialize_mutation_rates(population: list[Individual], max_mut_rate: float):
+#     min_max = population[-1].score - population[0].score
+#     min_score = population[0].score
+    
+#     for ind in population:
+#         ind.mutation_rate = ((ind.score - min_score+1) / min_max) * max_mut_rate
+
+def list_from_scores(ind_list: list[Individual]):
+    vec_ret = []
+    for ind in ind_list:
+        vec_ret.append(ind.score)
+    return vec_ret
+
+def mutation_rate_from_diversity(population: list[Individual]):
+    best = population[0].score
+    worst = population[-1].score
+    return (1 - (worst - best) / worst)
 
 # The function that runs the genetic algorithm
 def genetic_algorithm(
@@ -122,10 +114,6 @@ def genetic_algorithm(
     else:
         population = init_pop
     
-    if control:
-        population.sort()
-        initialize_mutation_rates(population, 0.25)
-
     if verbose:
         print("Initial population | individual score")
         for i, ind in enumerate(population):
@@ -147,24 +135,27 @@ def genetic_algorithm(
                 print(f'==== Best Individual Gen# {i} ====\n{best.genome} {best.score}')
         
         #elitist selection
-        population = elitist_selection(population, elitist_number)
+        # population = elitist_selection(population, elitist_number)
         
-        # new_generation = []
-        for i in range(population_size - elitist_number):
-            temp_genome = Individual()
-            rand_choice = random.choice(population)
-            if control:
-                best = population[0]
-                temp_genome.genome = swap_genome(rand_choice.genome, rand_choice.mutation_rate)
-                mut_rate = crossover_muttrate(rand_choice, best, 0.3)
-                # temp_genome.genome = rand_choice_1.genome
-                temp_genome.mutation_rate = mut_rate
-            else:
-                temp_genome.genome = swap_genome(rand_choice.genome, 0.25)
-            temp_genome.score = calculate_score(temp_genome.genome, cities_coordinates)
-            population.append(temp_genome)
+        choice_weights = list_from_scores(population)
+        choices = random.choices(population, choice_weights, k=population_size-1)
+        new_generation = []
 
-        # population = new_generation
+        if control:
+            mutation_rate = mutation_rate_from_diversity(population)
+            
+        for rand_choice in choices:
+            temp_genome = Individual()
+            # rand_choice = random.choices(population, choice_weights, k=1)[0]
+            if control:
+                temp_genome.genome = crossover(rand_choice.genome, mutation_rate)
+            else:
+                temp_genome.genome = crossover(rand_choice.genome, 0.25)
+            
+            temp_genome.score = calculate_score(temp_genome.genome, cities_coordinates)
+            new_generation.append(temp_genome)
+
+        population = new_generation
 
     print("Final population | individual score")
     for i, ind in enumerate(population):
@@ -209,7 +200,7 @@ if __name__ == "__main__":
             # (2, 3),
             # (-20, 1),
         ]
-        population_size = len(cities_coordinates)
+        population_size = 6
         # cities_distance_matrix=[
         #             [0, 2, 3, 12, 5],
         #             [2, 0, 4, 8, 4],
@@ -217,7 +208,7 @@ if __name__ == "__main__":
         #             [12, 8, 3, 0, 10],
         #             [5, 5, 3, 10, 0],
         #     ]
-        elitist_number = len(cities_coordinates) - len(cities_coordinates) // 3
+        elitist_number = 3
 
     genetic_algorithm(
         generations_quantity, population_size,
