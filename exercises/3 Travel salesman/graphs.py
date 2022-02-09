@@ -18,7 +18,7 @@ def remove_duplicate(population):
             )
             population.append(ind)
 
-def generate_graphics(pop_list: list, solutions_graph: str, mean_graph: str):
+def generate_graphics(pop_list: list, solutions_graph: str, solutions_graph_title: str, mean_graph: str, mean_graph_title: str):
     # This part is to make by each population
     current = copy.deepcopy(pop_list)    
     for pop in current:
@@ -61,7 +61,7 @@ def generate_graphics(pop_list: list, solutions_graph: str, mean_graph: str):
     plt.plot(range(1, num_generations+1), overall_lens, 
              color='green', marker='o',
              label='Overall solutions per generation')
-    plt.title('Quantity of solutions for each population per generation')
+    plt.title(solutions_graph_title)
     plt.legend(loc='best')
     plt.xlabel('Generation')
     plt.ylabel('Num. of Solutions')
@@ -87,7 +87,7 @@ def generate_graphics(pop_list: list, solutions_graph: str, mean_graph: str):
     plt.plot(range(1, num_generations+1), best_individual,
              color='pink', marker='^',
              label='Score of the best individual of gen.')
-    plt.title('Mean and best individual per generation')
+    plt.title(mean_graph_title)
     plt.legend(loc='best')
     plt.xlabel('Generation')
     plt.ylabel('Score')
@@ -122,8 +122,20 @@ if __name__ == '__main__':
     
     test = False
     
-    generate_graphics(pop_list, 'solutions_control.png', 'mean_control.png')
+    generate_graphics(
+        pop_list,
+        'solutions_control.png',
+        'Quantity of solutions for each population per generation (with control)',
+        'mean_control.png',
+        'Mean and best individual per generation (with control)'
+    )
     
     pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2, control=False, init_pop=initial_population)
     
-    generate_graphics(pop_list, 'solutions_normal.png', 'mean_normal.png')
+    generate_graphics(
+        pop_list,
+        'solutions_normal.png',
+        'Quantity of solutions for each population per generation (without control)',
+        'mean_normal.png'
+        'Mean and best individual per generation (without control)'
+    )
