@@ -88,7 +88,7 @@ def crossover_muttrate(ind: Individual, best: Individual, worst: Individual, mut
 def list_from_scores(ind_list: list[Individual]):
     vec_ret = []
     for ind in ind_list:
-        vec_ret.append(ind.score)
+        vec_ret.append(ind.score - ind_list[0].score)
     return vec_ret
 
 def mutation_rate_from_diversity(population: list[Individual]):
@@ -135,15 +135,16 @@ def genetic_algorithm(
                 print(f'==== Best Individual Gen# {i} ====\n{best.genome} {best.score}')
         
         #elitist selection
-        # population = elitist_selection(population, elitist_number)
+        population = elitist_selection(population, elitist_number)
         
         choice_weights = list_from_scores(population)
-        choices = random.choices(population, choice_weights, k=population_size-1)
-        new_generation = []
+        choices = random.choices(population, choice_weights, k=population_size-2)
+        new_generation = [population[0]]
 
         if control:
             mutation_rate = mutation_rate_from_diversity(population)
-            
+        
+        # for i in range(population_size):
         for rand_choice in choices:
             temp_genome = Individual()
             # rand_choice = random.choices(population, choice_weights, k=1)[0]
