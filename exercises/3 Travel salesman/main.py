@@ -184,11 +184,17 @@ if __name__ == "__main__":
 
         print("Quantidade de gerações:")
         generations_quantity = int(input())
+        
+        print("Quantidade de elites:")
+        elitist_number = int(input())
+        
+        print("É de controle? (1 - Verdadeiro ou 0 - Falso):")
+        is_control = bool(input())
 
-        cities_distance_matrix =[]
+        cities_coordinates = []
         print("matriz distancia das cidades")
         for i in range(cities_quantity):
-            cities_distance_matrix.append(list(map(int, input().split())))
+            cities_coordinates.append(list(map(int, input().split())))
     else:
         generations_quantity = 10
         cities_coordinates = [
@@ -210,8 +216,9 @@ if __name__ == "__main__":
         #             [5, 5, 3, 10, 0],
         #     ]
         elitist_number = 3
+        is_control = True
 
     genetic_algorithm(
         generations_quantity, population_size,
-        cities_coordinates, elitist_number, True, verbose
+        cities_coordinates, elitist_number, is_control, verbose
     )
