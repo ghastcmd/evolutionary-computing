@@ -7,6 +7,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import copy
+import random
 
 from main import genetic_algorithm, generate_initial_population
 
@@ -95,6 +96,17 @@ def generate_graphics(pop_list: list, solutions_graph: str, solutions_graph_titl
     
     print('Finished plotting the graphs')
 
+def generate_random_cities(num_cities: int, range_tuple: tuple[int, int]):
+    cities = []
+    
+    for _ in range(num_cities):
+        cities.append((
+            random.randint(range_tuple[0], range_tuple[1]),
+            random.randint(range_tuple[0], range_tuple[1])
+        ))
+    
+    return cities
+
 if __name__ == '__main__':
     # cities_coordinates = [
     #     (1, 0),
@@ -102,23 +114,23 @@ if __name__ == '__main__':
     #     (11, -31),
     #     (-1, 5),
     #     (20, 20),
+    #     # (1, 1),
+    #     # (2, 3),
+    #     # (-20, 1),
     # ]
-    cities_coordinates = [
-        (1, 0),
-        (23, -2),
-        (11, -31),
-        (-1, 5),
-        (20, 20),
-        # (1, 1),
-        # (2, 3),
-        # (-20, 1),
-    ]
     
-    num_generations = 10
+    cities_quantity = 6
+    num_generations = 30
+    population_size = 40
+    elite_size = 10
     
-    initial_population = generate_initial_population(10, cities_coordinates)
+    cities_coordinates = generate_random_cities(cities_quantity, (-20, 20))
     
-    pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2, control=True, init_pop=initial_population)
+    initial_population = generate_initial_population(population_size, cities_coordinates)
+    
+    pop_list = genetic_algorithm(num_generations, population_size, cities_coordinates, elite_size, control=True, init_pop=initial_population)
+    
+    print('Finished the Genetic Algorithm')
     
     test = False
     
@@ -130,12 +142,14 @@ if __name__ == '__main__':
         'Mean and best individual per generation (with control)'
     )
     
-    pop_list = genetic_algorithm(num_generations, 10, cities_coordinates, 2, control=False, init_pop=initial_population)
+    pop_list = genetic_algorithm(num_generations, population_size, cities_coordinates, elite_size, control=False, init_pop=initial_population)
+    
+    print('Finished the Genetic Algorithm')
     
     generate_graphics(
         pop_list,
         'solutions_normal.png',
         'Quantity of solutions for each population per generation (without control)',
-        'mean_normal.png'
+        'mean_normal.png',
         'Mean and best individual per generation (without control)'
     )
