@@ -55,7 +55,7 @@ def euclidean_distance(point1: tuple[int], point2: tuple[int]):
     counter = 0
     height_result = 0
     for i, j in zip(point1, point2):
-        if counter <= 2:
+        if counter < 2:
             ret_value += (i - j) ** 2
         else:
             height_result = height_difference(i, j)
