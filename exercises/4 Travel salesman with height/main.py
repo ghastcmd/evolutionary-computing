@@ -52,25 +52,20 @@ def generate_genome(initial: int, cities_quantity=5) -> str:
 
 def euclidean_distance(point1: tuple[int], point2: tuple[int]):
     ret_value: float = 0
-    counter = 0
-    height_result = 0
     for i, j in zip(point1, point2):
-        if counter < 2:
-            ret_value += (i - j) ** 2
-        else:
-            height_result = height_difference(i, j)
-        counter += 1
-    return math.sqrt(ret_value) + height_result
-
+        ret_value += (i - j) ** 2
+    return math.sqrt(ret_value)
 
 def height_difference(point1, point2):
     if point1 < point2:
         return point2 - point1
     return 0
 
+def calculate_distance(point1, point2):
+    return (euclidean_distance(point1[:2], point2[:2]) +
+            height_difference(point1[2], point2[2]))
+
 # Calculate the score of the path defined by the gene
-
-
 def calculate_score(genome, cities_coordinates: list[tuple[int, int]]):
     path_size = 0
     for i in range(len(genome)-1):
@@ -78,13 +73,11 @@ def calculate_score(genome, cities_coordinates: list[tuple[int, int]]):
                                         cities_coordinates[int(genome[i+1])])
     return path_size
 
-# Swap genome value
-
-
+# Crossover function (swapping)
 def crossover(genome: str, probability: float):
     genome = list(genome)
-    for i in range(1, len(genome)):
-        j = random.randint(1, len(genome)-1)
+    for i in range(0, len(genome)):
+        j = random.randint(0, len(genome)-1)
         if random.uniform(0, 1) < probability:
             genome[i], genome[j] = genome[j], genome[i]
     return ''.join(genome)
@@ -115,8 +108,6 @@ def mutation_rate_from_diversity(population: list[Individual]):
     return (1 - (worst - best) / worst)
 
 # The function that runs the genetic algorithm
-
-
 def genetic_algorithm(
     generations_quantity: int,
     population_size: int,
@@ -219,7 +210,7 @@ if __name__ == "__main__":
         is_control = bool(input())
 
         cities_coordinates = []
-        print("matriz distancia das cidades")
+        print("Posição das cidades e altura x y z")
         for i in range(cities_quantity):
             cities_coordinates.append(list(map(int, input().split())))
     else:
