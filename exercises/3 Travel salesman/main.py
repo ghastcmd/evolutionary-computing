@@ -192,7 +192,7 @@ if __name__ == "__main__":
         is_control = bool(input())
 
         cities_coordinates = []
-        print("matriz distancia das cidades")
+        print("Posição das cidades (x, y)")
         for i in range(cities_quantity):
             cities_coordinates.append(list(map(int, input().split())))
     else:
