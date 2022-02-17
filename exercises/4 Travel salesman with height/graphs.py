@@ -102,7 +102,8 @@ def generate_random_cities(num_cities: int, range_tuple: tuple[int, int]):
     for _ in range(num_cities):
         cities.append((
             random.randint(range_tuple[0], range_tuple[1]),
-            random.randint(range_tuple[0], range_tuple[1])
+            random.randint(range_tuple[0], range_tuple[1]),
+            random.randint(range_tuple[0]//2, range_tuple[1]//2)
         ))
     
     return cities
@@ -136,20 +137,8 @@ if __name__ == '__main__':
     
     generate_graphics(
         pop_list,
-        'solutions_control.png',
+        'solutions.png',
         'Quantity of solutions for each population per generation (with control)',
-        'mean_control.png',
+        'mean.png',
         'Mean and best individual per generation (with control)'
-    )
-    
-    pop_list = genetic_algorithm(num_generations, population_size, cities_coordinates, elite_size, control=False, init_pop=initial_population)
-    
-    print('Finished the Genetic Algorithm')
-    
-    generate_graphics(
-        pop_list,
-        'solutions_normal.png',
-        'Quantity of solutions for each population per generation (without control)',
-        'mean_normal.png',
-        'Mean and best individual per generation (without control)'
     )
